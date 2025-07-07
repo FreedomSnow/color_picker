@@ -2,7 +2,7 @@
 
 ## 项目简介 | Project Introduction
 
-本项目是一个基于 Node.js (Express) + React (Vite) 的全栈网站示例，首页 UI 结构仿照指定设计，适合用作前端练习或全栈项目模板。
+本项目是一个基于 Node.js (Express) + React (Vite) 的全栈网站。
 
 This project is a full-stack website example based on Node.js (Express) and React (Vite). The homepage UI is designed according to a given reference, suitable for frontend practice or as a full-stack project template.
 

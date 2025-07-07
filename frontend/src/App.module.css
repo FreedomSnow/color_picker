@@ -1,12 +1,36 @@
 .container {
   min-height: 100vh;
-  background: #f8f8f8;
-  border-radius: 32px;
-  margin: 16px;
+  width: 100vw;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  background: white;
+  border-radius: 0;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 24px #eee;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
 }
+body {
+  background: white;
+  font-family: 'Josefin Slab', serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+.content {
+  background: white;
+  border-radius: 40px;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+} 
 .topBar {
   display: flex;
   justify-content: space-between;
@@ -16,6 +40,11 @@
 .logo {
   font-weight: bold;
   font-size: 1.5rem;
+  letter-spacing: 0px;
+  color: rgb(74,74,74);
+}
+.logoTitle {
+  font-family: 'Monoton', cursive;
   letter-spacing: 2px;
 }
 .nav button {
@@ -36,6 +65,20 @@
   align-items: center;
   gap: 16px;
 }
+.rightBar button {
+  background: rgb(73,73,73);
+  border: 1px solid #fff;
+  border-radius: 20px;
+  color: #fff;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.rightBar button:hover {
+  background: black;
+  /* font-size: 1.25rem; */
+}
 .connectBtn {
   background: #222;
   color: #fff;
@@ -48,6 +91,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: rgb(246,246,246);
+  border-radius: 24px;
   padding: 80px 48px 0 48px;
 }
 .left {
@@ -96,4 +141,24 @@
   display: flex;
   align-items: center;
   gap: 8px;
-} 
+}
+.contactBtn {
+  background: rgb(73,73,73);
+  color: #fff;
+  border: 1px solid rgb(73,73,73);
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.englishBtn {
+  background: #fff !important;
+  color: rgb(73,73,73) !important;
+  border: 1px solid rgb(73,73,73) !important;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
