@@ -104,7 +104,7 @@ body {
   font-size: 1.22rem;
   color: #888;
   cursor: pointer;
-  border: 1px solid rgb(50,50,50);
+  border: 1px dashed rgb(50,50,50);
   text-align: left;
   background: #fff;
   margin-top: -20px;
@@ -124,9 +124,9 @@ body {
   margin-top: 0;
 }
 .tabCardActive {
-  background: #fffaec;
+  background: rgba(245,239,235,0.8);
   color: black;
-  border: 2px solid black;
+  border: 1px solid black;
   font-weight: bold;
   transform: scale(1.08);
   z-index: 2;
@@ -183,9 +183,9 @@ body {
 .left {
   max-width: 40%;
 }
-.highlight {
+/* .highlight {
   color: #ff9900;
-}
+} */
 .contact {
   margin-top: 32px;
   font-weight: bold;
