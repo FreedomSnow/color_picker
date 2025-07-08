@@ -1,0 +1,99 @@
+.container {
+  min-height: 100vh;
+  background: #f8f8f8;
+  border-radius: 32px;
+  margin: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 24px #eee;
+}
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 48px 0 48px;
+}
+.logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+.nav button {
+  margin: 0 8px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.nav button:hover {
+  background: #f0f0f0;
+}
+.rightBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.connectBtn {
+  background: #222;
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 20px;
+  border: none;
+  cursor: pointer;
+}
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 48px 0 48px;
+}
+.left {
+  max-width: 40%;
+}
+.highlight {
+  color: #ff9900;
+}
+.contact {
+  margin-top: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.desc {
+  margin-top: 16px;
+  color: #888;
+  font-size: 0.95rem;
+}
+.right {
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.imagePlaceholder {
+  width: 350px;
+  height: 350px;
+  background: #eee;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #bbb;
+}
+.bottomRight {
+  position: absolute;
+  right: 48px;
+  bottom: 32px;
+  background: #222;
+  color: #fff;
+  border-radius: 20px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+} 
