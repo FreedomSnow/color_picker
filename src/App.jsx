@@ -3,7 +3,12 @@ import { useState } from "react";
 
 function App() {
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const tabList = [
+    { title: '推荐主题', desc: '精选配色方案，灵感速查' },
+    { title: '图片取色', desc: '上传图片，智能提取主色调' },
+    { title: '颜色选择', desc: '多种方式精准选色' },
+    { title: '色轮调色板', desc: '可视化色轮自由调色' },
+  ];
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -21,13 +26,14 @@ function App() {
         {/* 主体内容 */}
         <div className={styles.mainContent}>
           <div className={styles.verticalTabs}>
-            {['推荐主题', '图片取色', '颜色选择', '色轮调色板'].map((tab, idx) => (
+            {tabList.map((tab, idx) => (
               <div
-                key={tab}
+                key={tab.title}
                 className={selectedTab === idx ? styles.tabCardActive : styles.tabCard}
                 onClick={() => setSelectedTab(idx)}
               >
-                {tab}
+                <div className={styles.tabCardTitle}>{tab.title}</div>
+                <div className={styles.tabCardDesc}>{tab.desc}</div>
               </div>
             ))}
           </div>
