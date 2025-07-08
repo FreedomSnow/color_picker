@@ -1,0 +1,23 @@
+{
+  "app": {
+    "title": "ColorPicker",
+    "tab": {
+      "theme": "Recommended Themes",
+      "image": "Image Picker",
+      "color": "Color Picker",
+      "wheel": "Color Wheel"
+    },
+    "desc": {
+      "theme": "Selected color schemes, quick inspiration",
+      "image": "Upload image, extract main color",
+      "color": "Multiple ways to pick color",
+      "wheel": "Visual color wheel, free adjustment"
+    },
+    "language": "English",
+    "contact": "Contact Us",
+    "themeContent": "Here is the recommended theme content",
+    "imageContent": "Here is the image picker content",
+    "colorContent": "Here is the color picker content",
+    "wheelContent": "Here is the color wheel content"
+  }
+} 

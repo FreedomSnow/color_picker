@@ -237,7 +237,7 @@ body {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-.englishBtn {
+.languageBtn {
   background: #fff !important;
   color: rgb(73,73,73) !important;
   border: 1px solid rgb(73,73,73) !important;
