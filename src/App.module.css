@@ -237,7 +237,7 @@ body {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-.englishBtn {
+.languageBtn {
   background: #fff !important;
   color: rgb(73,73,73) !important;
   border: 1px solid rgb(73,73,73) !important;
@@ -246,4 +246,28 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.languageDropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 6px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 120px;
+  z-index: 100;
+  padding: 8px 0;
+}
+.languageDropdownItem {
+  padding: 10px 24px;
+  cursor: pointer;
+  color: #333;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+.languageDropdownItem:hover {
+  background: #f5f5f5;
+  color: #222;
 }
