@@ -1,6 +1,9 @@
 import styles from "./App.module.css";
+import { useState } from "react";
 
 function App() {
+  const [selectedTab, setSelectedTab] = useState(0);
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -17,23 +20,22 @@ function App() {
         </div>
         {/* 主体内容 */}
         <div className={styles.mainContent}>
-          <div className={styles.left}>
-            <h1>
-              There is a <br />
-              <span className={styles.highlight}>Better Way</span>
-              <br />
-              to Secure.
-            </h1>
-            <div className={styles.contact}>
-              <span>●</span> Contact Us
-            </div>
-            <p className={styles.desc}>
-              FynSec is a vulnerability scanner that finds cyber security weaknesses in your digital infrastructure, to avoid costly data breaches.
-            </p>
+          <div className={styles.verticalTabs}>
+            {['推荐主题', '图片取色', '颜色选择', '色轮调色板'].map((tab, idx) => (
+              <div
+                key={tab}
+                className={selectedTab === idx ? styles.tabCardActive : styles.tabCard}
+                onClick={() => setSelectedTab(idx)}
+              >
+                {tab}
+              </div>
+            ))}
           </div>
-          <div className={styles.right}>
-            {/* 这里放置图片或3D效果 */}
-            <div className={styles.imagePlaceholder}>[图片/3D]</div>
+          <div className={styles.tabContent}>
+            {selectedTab === 0 && <div>这里是推荐主题内容</div>}
+            {selectedTab === 1 && <div>这里是图片取色内容</div>}
+            {selectedTab === 2 && <div>这里是颜色选择内容</div>}
+            {selectedTab === 3 && <div>这里是色轮调色板内容</div>}
           </div>
         </div>
       </div>
