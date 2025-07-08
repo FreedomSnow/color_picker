@@ -1,19 +1,42 @@
 import styles from "./App.module.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const tabList = [
     { title: t('app.tab.theme'), desc: t('app.desc.theme') },
     { title: t('app.tab.image'), desc: t('app.desc.image') },
     { title: t('app.tab.color'), desc: t('app.desc.color') },
     { title: t('app.tab.wheel'), desc: t('app.desc.wheel') },
   ];
+  const languages = [
+    { code: 'zh', label: t('app.language', { lng: 'zh' }) },
+    { code: 'en', label: t('app.language', { lng: 'en' }) },
+  ];
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    setDropdownOpen(false);
   };
+  // 点击外部关闭下拉
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -23,10 +46,26 @@ function App() {
             {/* <span role="img" aria-label="palette">🎨</span>  */}
             <span className={styles.logoTitle}>{t('app.title')}</span>
           </div>
-          <div className={styles.rightBar}>
-            <button className={styles.languageBtn} onClick={() => changeLanguage('zh')}>
+          <div className={styles.rightBar} style={{position: 'relative'}}>
+            <button
+              className={styles.languageBtn}
+              onClick={() => setDropdownOpen((v) => !v)}
+            >
               {t('app.language')} <svg style={{marginLeft: '6px', verticalAlign: 'middle'}} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
+            {dropdownOpen && (
+              <div className={styles.languageDropdown} ref={dropdownRef}>
+                {languages.map((lang) => (
+                  <div
+                    key={lang.code}
+                    className={styles.languageDropdownItem}
+                    onClick={() => changeLanguage(lang.code)}
+                  >
+                    {lang.label}
+                  </div>
+                ))}
+              </div>
+            )}
             <button className={styles.contactBtn} onClick={() => changeLanguage('zh')}>
               {t('app.contact')}
             </button>
