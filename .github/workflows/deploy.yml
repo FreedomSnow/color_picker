@@ -35,6 +35,17 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          
+      - name: 检查 SSH 密钥
+        run: |
+          ssh-add -l
+          echo "检查 SSH 配置文件权限"
+          ls -la ~/.ssh/
+          
+      - name: 测试 SSH 连接（详细模式）
+        run: |
+          echo "尝试 SSH 连接（详细模式）"
+          ssh -vvv ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "echo '连接成功'" || echo "SSH连接失败，但继续执行"
       
       - name: 设置部署路径
         id: set-path
@@ -46,6 +57,10 @@ jobs:
           fi
       
       - name: 部署到服务器
+        continue-on-error: true
         run: |
-          scp -r dist/* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/tmp/color_picker_dist/
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "sudo rm -rf ${{ steps.set-path.outputs.DEPLOY_PATH }}/* && sudo cp -r /tmp/color_picker_dist/* ${{ steps.set-path.outputs.DEPLOY_PATH }}/ && sudo chown -R www-data:www-data ${{ steps.set-path.outputs.DEPLOY_PATH }}/" 
+          echo "尝试 SCP 传输（详细模式）"
+          scp -vvv -r dist/* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/tmp/color_picker_dist/ || echo "SCP传输失败"
+          
+          echo "尝试 SSH 执行命令（详细模式）"
+          ssh -vvv ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "sudo rm -rf ${{ steps.set-path.outputs.DEPLOY_PATH }}/* && sudo cp -r /tmp/color_picker_dist/* ${{ steps.set-path.outputs.DEPLOY_PATH }}/ && sudo chown -R www-data:www-data ${{ steps.set-path.outputs.DEPLOY_PATH }}/" || echo "SSH命令执行失败" 
