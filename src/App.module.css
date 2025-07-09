@@ -126,7 +126,7 @@ body {
 .tabCardActive {
   background: rgba(245,239,235,0.8);
   color: black;
-  border: 1px solid black;
+  border: 1px solid rgb(50, 50, 50);
   font-weight: bold;
   transform: scale(1.08);
   z-index: 2;
@@ -153,7 +153,7 @@ body {
   background: #fff;
   border-radius: 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  padding: 40px 32px;
+  /* padding: 40px 32px; */
   display: flex;
   align-items: flex-start;
   font-size: 1.2rem;
