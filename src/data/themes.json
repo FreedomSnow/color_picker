@@ -1,0 +1,40 @@
+{
+  "themes": [
+    {
+      "id": 1,
+      "title": {
+        "zh": "美拉德",
+        "en": "Maillard"
+      },
+      "image": "/assets/themes/maillard.png",
+      "colors": ["#120B06", "#513E32", "#906E52", "#B28656", "#B8B2A1"]
+    },
+    {
+      "id": 2,
+      "title": {
+        "zh": "莫兰迪",
+        "en": "Morandi"
+      },
+      "image": "/assets/themes/morandi.png",
+      "colors": ["#C59F8F", "#C9958A", "#AF7361", "#B0857C", "#690E0C"]
+    },
+    {
+      "id": 3,
+      "title": {
+        "zh": "活力橙红",
+        "en": "Vibrant Orange Red"
+      },
+      "image": "/assets/themes/vibrant.jpg",
+      "colors": ["#DD4124", "#D65076", "#45B8AC", "#EFC050"]
+    },
+    {
+      "id": 4,
+      "title": {
+        "zh": "优雅紫灰",
+        "en": "Elegant Purple Gray"
+      },
+      "image": "/assets/themes/elegant.jpg",
+      "colors": ["#5B5EA6", "#9B2335", "#DFCFBE", "#55B4B0"]
+    }
+  ]
+} 
