@@ -1,0 +1,40 @@
+{
+  "themes": [
+    {
+      "id": 1,
+      "title": {
+        "zh": "美拉德",
+        "en": "Maillard"
+      },
+      "image": "/assets/themes/maillard.png",
+      "colors": ["#120B06", "#513E32", "#906E52", "#B28656", "#B8B2A1"]
+    },
+    {
+      "id": 2,
+      "title": {
+        "zh": "莫兰迪",
+        "en": "Morandi"
+      },
+      "image": "/assets/themes/morandi.png",
+      "colors": ["#C59F8F", "#C9958A", "#AF7361", "#B0857C", "#690E0C"]
+    },
+    {
+      "id": 3,
+      "title": {
+        "zh": "孟菲斯",
+        "en": "Memphis"
+      },
+      "image": "/assets/themes/memphis.png",
+      "colors": ["#F964C2", "#5A4AE8", "#CE88FF", "#F3EC46", "#38CEC4"]
+    },
+    {
+      "id": 4,
+      "title": {
+        "zh": "蒙德里安",
+        "en": "Mondrian"
+      },
+      "image": "/assets/themes/mondrian.png",
+      "colors": ["#F50F0F", "#1286DD", "#FFF100", "#FFFFFF", "#F66814"]
+    }
+  ]
+} 

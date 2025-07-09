@@ -1,0 +1,93 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 32px 32px;
+  max-height: 100vh;
+  overflow-y: auto;
+  align-items: start;
+  width: 100%;
+  flex: 1;
+  /* background: black; */
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 0px 0px 0px;
+  height: 190px;
+  width: 160px;
+  min-width: 0;
+}
+
+.image {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 0px;
+  background: white;
+}
+
+.title {
+  width: 160px;
+  padding: 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgb(50, 50, 50);
+  text-align: center;
+  margin-top: 8px;
+  /* background: black; */
+}
+
+.colors {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 0;
+  gap: 0px;
+  flex: 1;
+  /* background: rgba(0,0,0,0.8); */
+}
+
+.colorBlock {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+}
+.colorBlock:last-child {
+  margin-right: 0;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+.colorText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+  text-shadow: 
+    0 1px 2px rgba(255,255,255,0.5),
+    0 0 2px rgba(255,255,255,0.8),
+    0 0 4px rgba(255,255,255,0.6);
+  user-select: text;
+  letter-spacing: 0.5px;
+} 
