@@ -1,0 +1,51 @@
+name: 构建并部署 Color Picker
+
+on:
+  push:
+    branches:
+      - 'release'
+      - 'dev'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+      
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: 安装依赖
+        run: npm ci
+      
+      - name: 构建项目
+        run: npm run build
+      
+      - name: 设置 SSH 密钥
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: 添加服务器到已知主机
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+      
+      - name: 设置部署路径
+        id: set-path
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/release" ]]; then
+            echo "DEPLOY_PATH=/var/www/colorpicker.icu/html" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "DEPLOY_PATH=/var/www/dev.colorpicker.icu/html" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: 部署到服务器
+        run: |
+          scp -r dist/* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/tmp/color_picker_dist/
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "sudo rm -rf ${{ steps.set-path.outputs.DEPLOY_PATH }}/* && sudo cp -r /tmp/color_picker_dist/* ${{ steps.set-path.outputs.DEPLOY_PATH }}/ && sudo chown -R www-data:www-data ${{ steps.set-path.outputs.DEPLOY_PATH }}/" 
