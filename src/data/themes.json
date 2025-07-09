@@ -21,20 +21,20 @@
     {
       "id": 3,
       "title": {
-        "zh": "活力橙红",
-        "en": "Vibrant Orange Red"
+        "zh": "孟菲斯",
+        "en": "Memphis"
       },
-      "image": "/assets/themes/vibrant.jpg",
-      "colors": ["#DD4124", "#D65076", "#45B8AC", "#EFC050"]
+      "image": "/assets/themes/memphis.png",
+      "colors": ["#F964C2", "#5A4AE8", "#CE88FF", "#F3EC46", "#38CEC4"]
     },
     {
       "id": 4,
       "title": {
-        "zh": "优雅紫灰",
-        "en": "Elegant Purple Gray"
+        "zh": "蒙德里安",
+        "en": "Mondrian"
       },
-      "image": "/assets/themes/elegant.jpg",
-      "colors": ["#5B5EA6", "#9B2335", "#DFCFBE", "#55B4B0"]
+      "image": "/assets/themes/mondrian.png",
+      "colors": ["#F50F0F", "#1286DD", "#FFF100", "#FFFFFF", "#F66814"]
     }
   ]
 } 

@@ -6,6 +6,21 @@ import themesData from './data/themes.json';
 // 缓存变量
 let cachedThemes = null;
 
+// 计算文字颜色（黑色或白色）
+const getTextColor = (backgroundColor) => {
+  // 移除#号并转换为RGB
+  const hex = backgroundColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // 计算亮度
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  
+  // 亮度大于128用黑色文字，否则用白色文字
+  return brightness > 128 ? '#000000' : '#ffffff';
+};
+
 const RecommendThemes = () => {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +94,12 @@ const RecommendThemes = () => {
                   className={styles.colorBlock + (idx === 3 ? ' ' + styles.colorBlockBottom : '')}
                   style={{ backgroundColor: color }}
                 >
-                  <span className={styles.colorText}>{color}</span>
+                  <span 
+                    className={styles.colorText}
+                    style={{ color: getTextColor(color) }}
+                  >
+                    {color}
+                  </span>
                 </div>
               ))}
             </div>
