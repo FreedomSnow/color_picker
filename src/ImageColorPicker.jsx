@@ -25,6 +25,43 @@ function rgbToHex(rgb) {
   );
 }
 
+// 颜色聚类函数，RGB距离小于40视为同组
+function clusterColors(colorCountMap, threshold = 40) {
+  // colorCountMap: { 'r,g,b': count }
+  const clusters = [];
+  const colorKeys = Object.keys(colorCountMap);
+  for (const key of colorKeys) {
+    const [r, g, b] = key.split(',').map(Number);
+    let found = false;
+    for (const cluster of clusters) {
+      const [cr, cg, cb] = cluster.representative.split(',').map(Number);
+      const dist = Math.sqrt((r-cr)**2 + (g-cg)**2 + (b-cb)**2);
+      if (dist < threshold) {
+        cluster.members.push({ key, count: colorCountMap[key], rgb: [r,g,b] });
+        cluster.total += colorCountMap[key];
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      clusters.push({
+        representative: key,
+        members: [{ key, count: colorCountMap[key], rgb: [r,g,b] }],
+        total: colorCountMap[key],
+      });
+    }
+  }
+  // 选出每组中占比最大的颜色为代表色
+  return clusters.map(cluster => {
+    const maxMember = cluster.members.reduce((a, b) => (a.count > b.count ? a : b));
+    return {
+      hex: rgbToHex(`rgb(${maxMember.rgb[0]}, ${maxMember.rgb[1]}, ${maxMember.rgb[2]})`),
+      rgb: `rgba(${maxMember.rgb[0]}, ${maxMember.rgb[1]}, ${maxMember.rgb[2]})`,
+      ratio: cluster.total,
+    };
+  });
+}
+
 const ImageColorPicker = ({ selectedTheme }) => {
   const { t } = useTranslation();
   const [image, setImage] = useState(null); // 默认不显示图片
@@ -52,7 +89,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
     return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255})`;
   }
 
-  // 颜色提取函数（简单版，取像素色块出现频率最高的8个）
+  // 颜色提取函数（聚类版）
   const extractColors = (img) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -66,12 +103,22 @@ const ImageColorPicker = ({ selectedTheme }) => {
       const key = `${r},${g},${b}`;
       colorMap[key] = (colorMap[key] || 0) + 1;
     }
+    // palette 依然显示原始色块
     const sorted = Object.entries(colorMap).sort((a, b) => b[1] - a[1]);
     const topColors = sorted.slice(0, 8).map(([rgb]) => {
       const [r, g, b] = rgb.split(',');
       return `rgb(${r}, ${g}, ${b})`;
     });
     setPalette(topColors);
+    // 聚类并按占比排序
+    const clusters = clusterColors(colorMap, 80);
+    const total = Object.values(colorMap).reduce((a, b) => a + b, 0);
+    const sortedClusters = clusters.sort((a, b) => b.ratio - a.ratio);
+    setMainColors(sortedClusters.map(c => ({
+      hex: c.hex,
+      rgb: c.rgb,
+      ratio: (c.ratio / total * 100).toFixed(1) // 百分比
+    })));
   };
 
   // 处理图片选择
@@ -166,10 +213,10 @@ const ImageColorPicker = ({ selectedTheme }) => {
         </div>
         <div className={styles.paletteTitle}>{t('imagePicker.colorPalette')}</div>
         <div className={styles.paletteRow}>
-          {palette.map(color => (
-            <div className={styles.paletteColor} key={color}>
-              <div className={styles.paletteBlock} style={{ background: color }}></div>
-              <div className={styles.paletteHex}>{rgbToHex(color)}</div>
+          {mainColors.map((c, i) => (
+            <div className={styles.paletteColor} key={c.hex + i}>
+              <div className={styles.paletteBlock} style={{ background: c.hex }}></div>
+              <div className={styles.paletteHex}>{c.hex}</div>
             </div>
           ))}
         </div>
@@ -178,16 +225,17 @@ const ImageColorPicker = ({ selectedTheme }) => {
         <div className={styles.colorsPanel}>
           <div className={styles.colorsTitle}>{t('imagePicker.colors')}</div>
           <div className={styles.colorsList}>
-            {mainColors.map((c, i) => (
+            {/* {mainColors.map((c, i) => (
               <div className={styles.mainColorRow} key={i}>
                 <div className={styles.mainColorBlock} style={{ background: c.hex }}></div>
                 <div className={styles.mainColorInfo}>
                   <div className={styles.mainColorHex}>HEX: <span>{c.hex.replace('#','').toUpperCase()}</span></div>
                   <div className={styles.mainColorRgb}>RGB: <span>{c.rgb}</span></div>
+                  <div className={styles.mainColorRatio}>Ratio: <span>{c.ratio}%</span></div>
                 </div>
                 <button className={styles.copyBtn} title={t('imagePicker.copy')}><svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
