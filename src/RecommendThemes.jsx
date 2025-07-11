@@ -21,7 +21,7 @@ const getTextColor = (backgroundColor) => {
   return brightness > 128 ? '#000000' : '#ffffff';
 };
 
-const RecommendThemes = () => {
+const RecommendThemes = ({ onThemeSelect }) => {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [forceUpdate, setForceUpdate] = useState(0);
@@ -85,7 +85,7 @@ const RecommendThemes = () => {
     <div className={styles.grid}>
       {themes.map(theme => (
         <div key={theme.id}>
-          <div className={styles.card}>
+          <div className={styles.card} onClick={() => onThemeSelect && onThemeSelect(theme)} style={{ cursor: 'pointer' }}>
             <img className={styles.image} src={theme.image} alt="theme" />
             <div className={styles.colors}>
               {theme.colors.slice(0, 4).map((color, idx) => (

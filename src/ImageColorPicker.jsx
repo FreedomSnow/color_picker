@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './ImageColorPicker.module.css';
 
@@ -25,7 +25,7 @@ function rgbToHex(rgb) {
   );
 }
 
-const ImageColorPicker = () => {
+const ImageColorPicker = ({ selectedTheme }) => {
   const { t } = useTranslation();
   const [image, setImage] = useState(null); // 默认不显示图片
   const [mainColors, setMainColors] = useState([]); // 颜色数组
@@ -33,6 +33,24 @@ const ImageColorPicker = () => {
   const imageRef = useRef(null);
   const fileInputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
+
+  // 如果selectedTheme变化，自动显示图片和颜色
+  useEffect(() => {
+    if (selectedTheme) {
+      setImage(selectedTheme.image);
+      // 直接用主题色作为主色
+      setPalette(selectedTheme.colors || []);
+      setMainColors((selectedTheme.colors || []).map(hex => ({ hex, rgb: hexToRgb(hex) })));
+    }
+  }, [selectedTheme]);
+
+  // hex转rgb
+  function hexToRgb(hex) {
+    let c = hex.replace('#', '');
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const num = parseInt(c, 16);
+    return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255})`;
+  }
 
   // 颜色提取函数（简单版，取像素色块出现频率最高的8个）
   const extractColors = (img) => {
