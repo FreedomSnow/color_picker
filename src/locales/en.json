@@ -19,5 +19,20 @@
     "imageContent": "Here is the image picker content",
     "colorContent": "Here is the color picker content",
     "wheelContent": "Here is the color wheel content"
+  },
+  "imagePicker": {
+    "image": "Image",
+    "position": "Position",
+    "changeImage": "Change Image",
+    "colorPalette": "Color Palette",
+    "colors": "Colors",
+    "useYourImage": "Use Your Image",
+    "copy": "Copy",
+    "clickToUpload": "Click To Upload",
+    "orDrag": "Or Drag And Drop",
+    "maxSize": "Max File Size: 15 MB"
+  },
+  "recommendThemes": {
+    "loading": "Loading..."
   }
 } 

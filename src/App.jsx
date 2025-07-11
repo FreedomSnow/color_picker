@@ -2,6 +2,7 @@ import styles from "./App.module.css";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import RecommendThemes from './RecommendThemes';
+import ImageColorPicker from './ImageColorPicker';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -88,7 +89,7 @@ function App() {
           </div>
           <div className={styles.tabContent}>
             {selectedTab === 0 && <RecommendThemes />}
-            {selectedTab === 1 && <div>{t('app.imageContent')}</div>}
+            {selectedTab === 1 && <ImageColorPicker />}
             {selectedTab === 2 && <div>{t('app.colorContent')}</div>}
             {selectedTab === 3 && <div>{t('app.wheelContent')}</div>}
           </div>

@@ -25,7 +25,7 @@ const RecommendThemes = () => {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [forceUpdate, setForceUpdate] = useState(0);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const currentLanguage = i18n.language;
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const RecommendThemes = () => {
   };
 
   if (loading) {
-    return <div className={styles.loading}>加载中...</div>;
+    return <div className={styles.loading}>{t('recommendThemes.loading')}</div>;
   }
 
   return (
