@@ -16,7 +16,7 @@
         "en": "Morandi"
       },
       "image": "/assets/themes/morandi.png",
-      "colors": ["#C59F8F", "#C9958A", "#AF7361", "#B0857C", "#690E0C"]
+      "colors": ["#3A4E59", "#606551", "#9FACA1", "#B69664", "#D8CEC5"]
     },
     {
       "id": 3,
@@ -34,7 +34,34 @@
         "en": "Mondrian"
       },
       "image": "/assets/themes/mondrian.png",
-      "colors": ["#F50F0F", "#1286DD", "#FFF100", "#FFFFFF", "#F66814"]
-    }
+      "colors": ["#F50F0F", "#1286DD", "#FFFFFF", "#FFF100", "#F66814"]
+    },
+    {
+        "id": 5,
+        "title": {
+          "zh": "马卡龙",
+          "en": "Macaron"
+        },
+        "image": "/assets/themes/macaron.png",
+        "colors": ["#EC8892", "#FAB85A", "#28A49A", "#5048BC", "#945850"]
+      },
+      {
+        "id": 6,
+        "title": {
+          "zh": "敦煌",
+          "en": "Dunhuang"
+        },
+        "image": "/assets/themes/dunhuang.png",
+        "colors": ["#070D10", "#56271E", "#B7824E", "#569692", "#EBD7B6"]
+      },
+      {
+        "id": 7,
+        "title": {
+          "zh": "洛可可",
+          "en": "Rococo"
+        },
+        "image": "/assets/themes/rococo.png",
+        "colors": ["#556342", "#9DC6D8", "#D9B6AE", "#CEB498", "#EDEDED"]
+      }
   ]
 } 
