@@ -2,10 +2,12 @@ import styles from "./App.module.css";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import RecommendThemes from './RecommendThemes';
+import ImageColorPicker from './ImageColorPicker';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTheme, setSelectedTheme] = useState(null); // 新增
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const tabList = [
@@ -87,8 +89,17 @@ function App() {
             ))}
           </div>
           <div className={styles.tabContent}>
-            {selectedTab === 0 && <RecommendThemes />}
-            {selectedTab === 1 && <div>{t('app.imageContent')}</div>}
+            {selectedTab === 0 && (
+              <RecommendThemes
+                onThemeSelect={theme => {
+                  setSelectedTheme(theme);
+                  setSelectedTab(1);
+                }}
+              />
+            )}
+            {selectedTab === 1 && (
+              <ImageColorPicker selectedTheme={selectedTheme} />
+            )}
             {selectedTab === 2 && <div>{t('app.colorContent')}</div>}
             {selectedTab === 3 && <div>{t('app.wheelContent')}</div>}
           </div>
