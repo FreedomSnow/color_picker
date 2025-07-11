@@ -19,5 +19,20 @@
     "imageContent": "这里是图片取色内容",
     "colorContent": "这里是颜色选择内容",
     "wheelContent": "这里是色轮调色板内容"
+  },
+  "imagePicker": {
+    "image": "图片",
+    "position": "定位",
+    "changeImage": "更换图片",
+    "colorPalette": "调色板",
+    "colors": "颜色",
+    "useYourImage": "使用您的图片",
+    "copy": "复制",
+    "clickToUpload": "点击上传",
+    "orDrag": "或拖拽图片到此处",
+    "maxSize": "最大文件：15MB"
+  },
+  "recommendThemes": {
+    "loading": "加载中..."
   }
 } 
