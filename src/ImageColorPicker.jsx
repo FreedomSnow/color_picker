@@ -167,14 +167,19 @@ const ImageColorPicker = ({ selectedTheme }) => {
   // 点击图片获取颜色
   const handleImageClick = (e) => {
     if (!imageRef.current) return;
-    const rect = imageRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const scaleX = imageRef.current.naturalWidth / rect.width;
-    const scaleY = imageRef.current.naturalHeight / rect.height;
+    const imgRect = imageRef.current.getBoundingClientRect();
+    const boxRect = imageRef.current.parentElement.getBoundingClientRect();
+    // 鼠标在图片上的相对坐标
+    const x = e.clientX - imgRect.left;
+    const y = e.clientY - imgRect.top;
+    // 鼠标在imageBox内的绝对坐标（用于marker定位）
+    const markerLeft = imgRect.left - boxRect.left + x;
+    const markerTop = imgRect.top - boxRect.top + y;
+    // 取色逻辑
+    const scaleX = imageRef.current.naturalWidth / imgRect.width;
+    const scaleY = imageRef.current.naturalHeight / imgRect.height;
     const realX = Math.round(x * scaleX);
     const realY = Math.round(y * scaleY);
-    // 获取像素颜色
     const canvas = document.createElement('canvas');
     canvas.width = imageRef.current.naturalWidth;
     canvas.height = imageRef.current.naturalHeight;
@@ -183,8 +188,8 @@ const ImageColorPicker = ({ selectedTheme }) => {
     const pixel = ctx.getImageData(realX, realY, 1, 1).data;
     const hex = rgbToHex(`rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
     const rgb = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-    setMarker({ x, y, hex, rgb });
-    setSelectedColor(null); // 取消 palette 选中色块
+    setMarker({ left: markerLeft, top: markerTop, hex, rgb });
+    setSelectedColor(null);
   };
 
   return (
@@ -213,14 +218,14 @@ const ImageColorPicker = ({ selectedTheme }) => {
               onDrop={handleDrop}
             >
               {!image && (
-                <>
+                <div className={styles.uploadPanel}>
                   <div className={styles.uploadIcon}>
                     <svg width="56" height="56" fill="none" stroke="#1976d2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 21l-6-6M21 21v-4M21 21h-4"/></svg>
                   </div>
                   <div className={styles.uploadText}>{t('imagePicker.clickToUpload') || 'Click To Upload'}</div>
                   <div className={styles.uploadDesc}>{t('imagePicker.orDrag') || 'Or Drag And Drop'}</div>
                   <div className={styles.uploadTip}>{t('imagePicker.maxSize') || 'Max File Size: 15 MB'}</div>
-                </>
+                </div>
               )}
               {image && (
                 <div style={{position:'relative', width:'100%', height:'100%'}}>
@@ -236,8 +241,8 @@ const ImageColorPicker = ({ selectedTheme }) => {
                   {marker && (
                     <div style={{
                       position: 'absolute',
-                      left: marker.x - 10,
-                      top: marker.y - 20,
+                      left: marker.left - 10,
+                      top: marker.top - 20,
                       pointerEvents: 'none',
                       zIndex: 10
                     }}>
