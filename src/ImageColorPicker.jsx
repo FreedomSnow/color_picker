@@ -70,7 +70,8 @@ const ImageColorPicker = ({ selectedTheme }) => {
   const imageRef = useRef(null);
   const fileInputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(null); // 新增：当前选中的色块
+  const [selectedColor, setSelectedColor] = useState(null); // palette 选中色块
+  const [marker, setMarker] = useState(null); // {x, y, color}
 
   // 如果selectedTheme变化，自动显示图片和颜色
   useEffect(() => {
@@ -163,6 +164,29 @@ const ImageColorPicker = ({ selectedTheme }) => {
     extractColors(e.target);
   };
 
+  // 点击图片获取颜色
+  const handleImageClick = (e) => {
+    if (!imageRef.current) return;
+    const rect = imageRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const scaleX = imageRef.current.naturalWidth / rect.width;
+    const scaleY = imageRef.current.naturalHeight / rect.height;
+    const realX = Math.round(x * scaleX);
+    const realY = Math.round(y * scaleY);
+    // 获取像素颜色
+    const canvas = document.createElement('canvas');
+    canvas.width = imageRef.current.naturalWidth;
+    canvas.height = imageRef.current.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imageRef.current, 0, 0);
+    const pixel = ctx.getImageData(realX, realY, 1, 1).data;
+    const hex = rgbToHex(`rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
+    const rgb = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+    setMarker({ x, y, hex, rgb });
+    setSelectedColor(null); // 取消 palette 选中色块
+  };
+
   return (
     <div className={styles.root}>
       <div className={styles.top}>
@@ -183,7 +207,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
             </div>
             <div
               className={`${styles.imageBox} ${dragActive ? styles.dragActive : ''}`}
-              onClick={handleImageBoxClick}
+              // onClick={handleImageBoxClick} // 移除点击上传
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -199,13 +223,32 @@ const ImageColorPicker = ({ selectedTheme }) => {
                 </>
               )}
               {image && (
-                <img
-                  ref={imageRef}
-                  src={image}
-                  alt="uploaded"
-                  className={styles.imagePreview}
-                  onLoad={handleImgLoad}
-                />
+                <div style={{position:'relative', width:'100%', height:'100%'}}>
+                  <img
+                    ref={imageRef}
+                    src={image}
+                    alt="uploaded"
+                    className={styles.imagePreview}
+                    onLoad={handleImgLoad}
+                    onClick={handleImageClick}
+                    style={{cursor:'crosshair'}}
+                  />
+                  {marker && (
+                    <div style={{
+                      position: 'absolute',
+                      left: marker.x - 10,
+                      top: marker.y - 20,
+                      pointerEvents: 'none',
+                      zIndex: 10
+                    }}>
+                      {/* 地图大头针风格icon */}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" fill="#f44336"/>
+                        <circle cx="12" cy="9" r="2.5" fill="#fff"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
               )}
               <input
                 type="file"
@@ -220,7 +263,15 @@ const ImageColorPicker = ({ selectedTheme }) => {
         <div className={styles.topright} style={{ marginLeft: 20 }}>
           <div className={styles.colorsTitle}>{t('imagePicker.colors')}</div>
           <div className={styles.colorsPanel}>
-            {(selectedColor || mainColors[0]) && (
+            {marker ? (
+              <div className={styles.mainColorInfoPanel}>
+                <div className={styles.mainColorBlockVertical} style={{ background: marker.hex }}></div>
+                <div className={styles.mainColorTextPanel}>
+                  <div className={styles.mainColorHexText}>{t('imagePicker.hex', 'HEX:')} <span>{marker.hex.toUpperCase()}</span></div>
+                  <div className={styles.mainColorRgbText}>{t('imagePicker.rgb', 'RGB:')} <span>{marker.rgb}</span></div>
+                </div>
+              </div>
+            ) : (selectedColor || mainColors[0]) && (
               <div className={styles.mainColorInfoPanel}>
                 <div className={styles.mainColorBlockVertical} style={{ background: (selectedColor || mainColors[0]).hex }}></div>
                 <div className={styles.mainColorTextPanel}>
@@ -244,7 +295,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
                   : styles.paletteColor
               }
               key={c.hex + i}
-              onClick={() => setSelectedColor(c)}
+              onClick={() => { setSelectedColor(c); setMarker(null); }}
               style={{ cursor: 'pointer' }}
             >
               <div className={styles.paletteBlock} style={{ background: c.hex }}></div>
