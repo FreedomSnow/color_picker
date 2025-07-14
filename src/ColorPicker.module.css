@@ -1,0 +1,213 @@
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 20px 30px;
+  background: lightgrey;
+}
+
+.pickerArea {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-bottom: 36px;
+}
+.svPanel {
+  flex: 1 1 0;
+  max-width: 50%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(90deg, #fff, transparent), linear-gradient(0deg, #000, transparent);
+  border-radius: 16px;
+  position: relative;
+  margin-right: 20px;
+}
+.svThumb {
+  position: absolute;
+  top: 12px;
+  left: 120px;
+  width: 24px;
+  height: 24px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  pointer-events: none;
+}
+.hueSlider {
+  width: 24px;
+  height: 180px;
+  background: linear-gradient(to bottom, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+  border-radius: 8px;
+  margin-right: 8px;
+  position: relative;
+}
+.hueThumb {
+  position: absolute;
+  left: -4px;
+  top: 140px;
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.10);
+}
+.alphaSlider {
+  width: 24px;
+  height: 180px;
+  background: linear-gradient(to bottom, rgba(255,0,0,0), #f00);
+  border-radius: 8px;
+  position: relative;
+  margin-right: 12px;
+}
+.alphaThumb {
+  position: absolute;
+  left: -4px;
+  top: 20px;
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.10);
+}
+.colorSteps {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  height: 180px;
+  justify-content: space-between;
+}
+.colorStep {
+  width: 32px;
+  height: 20px;
+  border-radius: 6px;
+  background: #f5b5b5;
+  margin-bottom: 2px;
+}
+.valueRow {
+  display: flex;
+  align-items: flex-start;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+.valueLabelWrap {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  margin-right: 16px;
+  height: 40px;
+}
+.valueLabel {
+  color: black;
+  font-weight: 700;
+  font-size: 18px;
+  margin-right: 4px;
+  line-height: 1.2;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+}
+.valueDropdownBtn {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.valueDropdown {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  min-width: 80px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 10;
+  margin-top: 2px;
+}
+.valueDropdownItem {
+  padding: 8px 16px;
+  font-size: 16px;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.valueDropdownItem:hover {
+  background: #f5f5f5;
+}
+.valueNumWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 16px;
+  height: 40px;
+  justify-content: flex-start;
+}
+.valueNum {
+  font-size: 18px;
+  color: black;
+  font-weight: 500;
+  line-height: 1.2;
+  width: 40px;
+  height: 22px;
+  display: flex;
+  align-items: flex-start;
+}
+.valueNumTitle {
+  font-size: 20px;
+  color: #888;
+  margin-top: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.valueHex {
+  font-size: 18px;
+  color: black;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  height: 22px;
+  display: flex;
+  align-items: flex-start;
+  margin-left: 20px;
+} 
+.valueHexTitle {
+  font-size: 20px;
+  color: #888;
+  margin-top: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  margin-left: 20px;
+}
+
+.swatchBar {
+  display: flex;
+  align-items: center;
+  margin-top: 36px;
+}
+.addSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 22px;
+  color: #888;
+  margin-right: 8px;
+  cursor: pointer;
+}
+.swatchList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 8px;
+}
+.swatch {
+  width: 32px;
+  height: 24px;
+  border-radius: 6px;
+  background: #eee;
+  border: 1px solid #ddd;
+}
