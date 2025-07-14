@@ -30,9 +30,12 @@
     "copy": "复制",
     "clickToUpload": "点击上传",
     "orDrag": "或拖拽图片到此处",
-    "maxSize": "最大文件：15MB"
+    "maxSize": "最大文件：15MB",
+    "hex": "HEX：",
+    "rgb": "RGB："
   },
   "recommendThemes": {
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "untitled": "未命名"
   }
 } 

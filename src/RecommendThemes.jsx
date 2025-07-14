@@ -74,7 +74,7 @@ const RecommendThemes = ({ onThemeSelect }) => {
     if (typeof titleObj === 'string') {
       return titleObj; // 兼容旧格式
     }
-    return titleObj[currentLanguage] || titleObj.zh || titleObj.en || 'Untitled';
+    return titleObj[currentLanguage] || titleObj.zh || titleObj.en || t('recommendThemes.untitled');
   };
 
   if (loading) {
