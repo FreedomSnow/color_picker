@@ -85,11 +85,11 @@
   width: 100%;
   max-width: 100%;
   aspect-ratio: 16/9;
-  background: #f5f5f5;
-  border-radius: 16px;
+  /* background: #f5f5f5; */
+  /* border-radius: 16px; */
   overflow: hidden;
   margin-bottom: 18px;
-  border: 1px dashed rgb(50, 50, 50);
+  /* border: none; */
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -102,9 +102,33 @@
   border-color: #4666F6;
   background: #f0f6ff;
 }
+
+.uploadPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+  border-radius: 16px;
+  border: 1px dashed rgb(50, 50, 50);
+  box-sizing: border-box;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
 .uploadIcon {
   color: #1976d2;
   margin-bottom: 12px;
+  border: 1px solid #bbb;
+  border-radius: 50%;
+  padding: 8px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .uploadText {
   font-size: 16px;
@@ -123,10 +147,19 @@
   color: #888;
 }
 .imagePreview {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
   display: block;
+  margin: 0 auto;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+  /* 宽度自适应图片 */
+  width: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: green;
 }
 
 .bottom {
