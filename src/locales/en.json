@@ -30,9 +30,12 @@
     "copy": "Copy",
     "clickToUpload": "Click To Upload",
     "orDrag": "Or Drag And Drop",
-    "maxSize": "Max File Size: 15 MB"
+    "maxSize": "Max File Size: 15 MB",
+    "hex": "HEX:",
+    "rgb": "RGB:"
   },
   "recommendThemes": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "untitled": "Untitled"
   }
 } 
