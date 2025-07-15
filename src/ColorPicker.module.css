@@ -19,7 +19,7 @@
   aspect-ratio: 16/9;
   flex: 1 1 0;
   max-width: 50%;
-  border: 1px dashed rgb(50, 50, 50);
+  border: 1px dashed rgb(155, 155, 155);
   background: linear-gradient(90deg, #fff, transparent), linear-gradient(0deg, #000, transparent);
   border-radius: 16px;
   position: relative;
@@ -34,12 +34,19 @@
   pointer-events: none;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
+
+.hueSliderWapper {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  height: 90%;
+  /* background: yellow; */
+}
 .hueSlider {
-  width: 32px;
+  width: 20px;
   height: 100%;
   background: linear-gradient(to bottom, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
-  border-radius: 16px;
-  margin-right: 36px;
+  border-radius: 10px;
   position: relative;
 }
 .hueThumb {
@@ -48,21 +55,33 @@
   height: 28px;
   border-radius: 50%;
   border: 2px solid #fff;
-  /* box-shadow: 0 1px 4px rgba(0,0,0,0.10);
-  background: rgba(0,0,0,0.10); */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  /* 位置和背景由JS控制 */
+  cursor: pointer;
+  z-index: 2;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.alphaSliderWapper {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  height: 90%;
+  /* background: yellow; */
 }
 .alphaSlider {
-  width: 24px;
-  height: 180px;
+  width: 28px;
+  height: 100%;
+  border: 1px dashed rgb(155, 155, 155);
   background: linear-gradient(to bottom, rgba(255,0,0,0), #f00);
   border-radius: 8px;
   position: relative;
-  margin-right: 12px;
+  margin-left: 25px;
 }
 .alphaThumb {
   position: absolute;
   left: -4px;
-  top: 20px;
   width: 32px;
   height: 16px;
   border-radius: 8px;
@@ -73,7 +92,7 @@
 .colorSteps {
   display: flex;
   flex-direction: column;
-  margin-left: 8px;
+  margin-left: 36px;
   height: 180px;
   justify-content: space-between;
 }

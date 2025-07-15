@@ -122,26 +122,35 @@ const ColorPicker = () => {
         <div className={styles.svPanel} style={{background: svPanelBg}}>
           <div className={styles.svThumb}></div>
         </div>
-        <div
-          className={styles.hueSlider}
-          ref={hueSliderRef}
-          onMouseDown={e => { handleHueSliderClick(e); setDragging(true); }}
-          onTouchStart={e => { handleHueSliderClick(e); setDragging(true); }}
-          onClick={handleHueSliderClick}
-          style={{position:'relative'}}
-        >
+        <div className={styles.hueSliderWapper}>
           <div
-            className={styles.hueThumb}
-            style={{ top: hueSliderRef.current ? `${hueThumbTop - 14}px` : '0px' }}
-          ></div>
+            className={styles.hueSlider}
+            ref={hueSliderRef}
+            onMouseDown={e => { handleHueSliderClick(e); setDragging(true); }}
+            onTouchStart={e => { handleHueSliderClick(e); setDragging(true); }}
+            onClick={handleHueSliderClick}
+            style={{position:'relative', height: '100%'}}
+          >
+            <div
+              className={styles.hueThumb}
+              style={{
+                top: hueSliderRef.current ? `${(hue / 359) * hueSliderRef.current.getBoundingClientRect().height}px` : '0px',
+                background: `hsl(${hue}, 100%, 50%)`
+              }}
+            ></div>
+          </div>
         </div>
-        <div className={styles.alphaSlider}>
-          <div className={styles.alphaThumb}></div>
+        <div className={styles.alphaSliderWapper}>
+          <div className={styles.alphaSlider}>
+            <div className={styles.alphaThumb}></div>
+          </div>
         </div>
-        <div className={styles.colorSteps}>
-          {[...Array(7)].map((_, i) => (
-            <div key={i} className={styles.colorStep}></div>
-          ))}
+        <div className={styles.colorStepsWapper}>
+          <div className={styles.colorSteps}>
+            {[...Array(7)].map((_, i) => (
+              <div key={i} className={styles.colorStep}></div>
+            ))}
+          </div>
         </div>
       </div>
       {/* Color Value Display */}
@@ -172,7 +181,7 @@ const ColorPicker = () => {
           </div>
         ))}
         <div className={styles.valueNumWrap}>
-          <span className={styles.valueHex}>{hex.replace('#','').toUpperCase()}</span>
+          <span className={styles.valueHex}>{hex.toUpperCase()}</span>
           <div className={styles.valueHexTitle}>HEX</div>
         </div>
       </div>
