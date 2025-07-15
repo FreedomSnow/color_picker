@@ -74,7 +74,7 @@
   width: 28px;
   height: 100%;
   border: 1px dashed rgb(155, 155, 155);
-  background: linear-gradient(to bottom, rgba(255,0,0,0), #f00);
+  background: linear-gradient(to bottom, rgba(255, 0, 0, 0), #f00);
   border-radius: 8px;
   position: relative;
   margin-left: 25px;
@@ -89,19 +89,27 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.10);
   background: rgba(0,0,0,0.10);
 }
+
+.colorStepsWapper {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  height: 90%;
+  /* background: yellow; */
+}
 .colorSteps {
   display: flex;
   flex-direction: column;
-  margin-left: 36px;
-  height: 180px;
+  margin-left: 25px;
+  height: 100%;
   justify-content: space-between;
 }
 .colorStep {
   width: 32px;
   height: 20px;
-  border-radius: 6px;
+  /* border-radius: 6px; */
   background: #f5b5b5;
-  margin-bottom: 2px;
+  /* margin-bottom: 2px; */
 }
 .valueRow {
   display: flex;
