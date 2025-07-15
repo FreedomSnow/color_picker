@@ -24,7 +24,7 @@ const DEFAULT_H = 0, DEFAULT_S = 50, DEFAULT_B = 50, DEFAULT_A = 1;
 const ColorPicker = () => {
   const { i18n, t } = useTranslation();
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [mode, setMode] = useState('HSBA');
+  const [mode, setMode] = useState('RGBA');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -311,11 +311,59 @@ const ColorPicker = () => {
             ></div>
           </div>
         </div>
-        <div className={styles.colorStepsWapper}>
-          <div className={styles.colorSteps}>
-            {[...Array(10)].map((_, i) => (
-              <div key={i} className={styles.colorStep}></div>
-            ))}
+        <div className={styles.colorStepsWapper} style={{display: 'flex', flexDirection: 'row', gap: 12}}>
+          {/* Shades 列：当前色到黑 */}
+          <div className={styles.colorSteps} style={{flex: 1}}>
+            {[...Array(11)].map((_, i) => {
+              // Shades: 明度从当前明度递减到0
+              const stepB = brightness * (1 - i / 10);
+              const [sr, sg, sb] = hsvToRgb(hue, saturation, stepB);
+              const stepHex = rgbToHex(sr, sg, sb);
+              const brightnessVal = (sr * 299 + sg * 587 + sb * 114) / 1000;
+              const textColor = brightnessVal > 140 ? '#222' : '#fff';
+              const isCurrent = i === 0;
+              return (
+                <div
+                  key={i}
+                  className={styles.colorStep}
+                  style={{
+                    background: `rgb(${sr},${sg},${sb})`,
+                    border: isCurrent ? '2px solid #fff' : 'none',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <span className={styles.colorStepHex} style={{color: textColor}}>{stepHex}</span>
+                </div>
+              );
+            })}
+          </div>
+          {/* Tints 列：当前色到白（Tints算法） */}
+          <div className={styles.colorSteps} style={{flex: 1}}>
+            {[...Array(11)].map((_, i) => {
+              // Tints: 添加量从0到1
+              const tintAmount = i / 10;
+              const [baseR, baseG, baseB] = hsvToRgb(hue, saturation, brightness);
+              const sr = Math.round(baseR + (255 - baseR) * tintAmount);
+              const sg = Math.round(baseG + (255 - baseG) * tintAmount);
+              const sb = Math.round(baseB + (255 - baseB) * tintAmount);
+              const stepHex = rgbToHex(sr, sg, sb);
+              const brightnessVal = (sr * 299 + sg * 587 + sb * 114) / 1000;
+              const textColor = brightnessVal > 140 ? '#222' : '#fff';
+              const isCurrent = i === 0;
+              return (
+                <div
+                  key={i}
+                  className={styles.colorStep}
+                  style={{
+                    background: `rgb(${sr},${sg},${sb})`,
+                    border: isCurrent ? '2px solid #fff' : 'none',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <span className={styles.colorStepHex} style={{color: textColor}}>{stepHex}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

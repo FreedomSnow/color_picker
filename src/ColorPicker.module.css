@@ -102,14 +102,33 @@
   flex-direction: column;
   margin-left: 25px;
   height: 100%;
-  justify-content: space-between;
+  justify-content: stretch;
 }
 .colorStep {
-  width: 32px;
-  height: 20px;
-  /* border-radius: 6px; */
-  background: #f5b5b5;
-  /* margin-bottom: 2px; */
+  width: 100px;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgb(50, 50, 50);
+  border-radius: 0;
+  position: relative;
+  background: #eee;
+  min-height: 0;
+}
+.colorStep:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.colorStep:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.colorStepHex {
+  position: absolute;
+  color: rgb(50, 50, 50);
+  font-size: 13px;
 }
 .valueRow {
   display: flex;
