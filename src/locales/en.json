@@ -34,6 +34,20 @@
     "hex": "HEX:",
     "rgb": "RGB:"
   },
+  "colorPicker": {
+    "variations": "Variations",
+    "shades": "Shades",
+    "tints": "Tints",
+    "combinations": "Color Combinations",
+    "comb": {
+      "complement": "Complement",
+      "split-complementary": "Split-complementary",
+      "triadic": "Triadic",
+      "analogous": "Analogous",
+      "monochromatic": "Monochromatic",
+      "tetradic": "Tetradic"
+    }
+  },
   "recommendThemes": {
     "loading": "Loading...",
     "untitled": "Untitled"
