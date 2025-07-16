@@ -2,14 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './ImageColorPicker.module.css';
 
-const demoImage = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80';
-const demoColors = [
-  '#CCD8DE', '#5BACC9', '#35829B', '#EFE4E2', '#F5BBA6', '#2D4645', '#3A5B47'
-];
-const demoMainColors = [
-  { hex: '#EEB09D', rgb: 'rgba(246, 209, 195)' },
-  { hex: '#EEB09D', rgb: 'rgba(246, 209, 195)' }
-];
 
 // rgb字符串转hex
 function rgbToHex(rgb) {
@@ -25,41 +17,86 @@ function rgbToHex(rgb) {
   );
 }
 
-// 颜色聚类函数，RGB距离小于40视为同组
-function clusterColors(colorCountMap, threshold = 40) {
-  // colorCountMap: { 'r,g,b': count }
-  const clusters = [];
-  const colorKeys = Object.keys(colorCountMap);
-  for (const key of colorKeys) {
-    const [r, g, b] = key.split(',').map(Number);
-    let found = false;
-    for (const cluster of clusters) {
-      const [cr, cg, cb] = cluster.representative.split(',').map(Number);
-      const dist = Math.sqrt((r-cr)**2 + (g-cg)**2 + (b-cb)**2);
-      if (dist < threshold) {
-        cluster.members.push({ key, count: colorCountMap[key], rgb: [r,g,b] });
-        cluster.total += colorCountMap[key];
-        found = true;
+// K-means聚类算法实现
+function kmeans(colors, k = 5, maxIter = 10) {
+  // colors: [[r,g,b], ...]
+  // k: 聚类数
+  // maxIter: 最大迭代次数
+  if (colors.length === 0) return [];
+  // 随机初始化中心点
+  let centroids = [];
+  const used = new Set();
+  while (centroids.length < k) {
+    const idx = Math.floor(Math.random() * colors.length);
+    if (!used.has(idx)) {
+      centroids.push(colors[idx]);
+      used.add(idx);
+    }
+  }
+  let assignments = new Array(colors.length).fill(0);
+  for (let iter = 0; iter < maxIter; iter++) {
+    // 1. 分配每个点到最近的中心
+    for (let i = 0; i < colors.length; i++) {
+      let minDist = Infinity, minIdx = 0;
+      for (let j = 0; j < centroids.length; j++) {
+        const d = Math.sqrt(
+          (colors[i][0] - centroids[j][0]) ** 2 +
+          (colors[i][1] - centroids[j][1]) ** 2 +
+          (colors[i][2] - centroids[j][2]) ** 2
+        );
+        if (d < minDist) {
+          minDist = d;
+          minIdx = j;
+        }
+      }
+      assignments[i] = minIdx;
+    }
+    // 2. 更新中心点
+    const newCentroids = Array.from({ length: k }, () => [0, 0, 0]);
+    const counts = Array(k).fill(0);
+    for (let i = 0; i < colors.length; i++) {
+      const c = assignments[i];
+      newCentroids[c][0] += colors[i][0];
+      newCentroids[c][1] += colors[i][1];
+      newCentroids[c][2] += colors[i][2];
+      counts[c]++;
+    }
+    for (let j = 0; j < k; j++) {
+      if (counts[j] > 0) {
+        newCentroids[j][0] = Math.round(newCentroids[j][0] / counts[j]);
+        newCentroids[j][1] = Math.round(newCentroids[j][1] / counts[j]);
+        newCentroids[j][2] = Math.round(newCentroids[j][2] / counts[j]);
+      } else {
+        // 若某类无点，随机重置
+        newCentroids[j] = colors[Math.floor(Math.random() * colors.length)];
+      }
+    }
+    // 检查收敛
+    let converged = true;
+    for (let j = 0; j < k; j++) {
+      if (
+        centroids[j][0] !== newCentroids[j][0] ||
+        centroids[j][1] !== newCentroids[j][1] ||
+        centroids[j][2] !== newCentroids[j][2]
+      ) {
+        converged = false;
         break;
       }
     }
-    if (!found) {
-      clusters.push({
-        representative: key,
-        members: [{ key, count: colorCountMap[key], rgb: [r,g,b] }],
-        total: colorCountMap[key],
-      });
-    }
+    centroids = newCentroids;
+    if (converged) break;
   }
-  // 选出每组中占比最大的颜色为代表色
-  return clusters.map(cluster => {
-    const maxMember = cluster.members.reduce((a, b) => (a.count > b.count ? a : b));
-    return {
-      hex: rgbToHex(`rgb(${maxMember.rgb[0]}, ${maxMember.rgb[1]}, ${maxMember.rgb[2]})`),
-      rgb: `rgba(${maxMember.rgb[0]}, ${maxMember.rgb[1]}, ${maxMember.rgb[2]})`,
-      ratio: cluster.total,
-    };
-  });
+  // 统计每个聚类的数量
+  const clusterCounts = Array(k).fill(0);
+  for (let i = 0; i < assignments.length; i++) {
+    clusterCounts[assignments[i]]++;
+  }
+  // 返回聚类中心和占比
+  return centroids.map((c, i) => ({
+    rgb: `rgb(${c[0]}, ${c[1]}, ${c[2]})`,
+    hex: rgbToHex(`rgb(${c[0]}, ${c[1]}, ${c[2]})`),
+    ratio: clusterCounts[i]
+  }));
 }
 
 const ImageColorPicker = ({ selectedTheme }) => {
@@ -89,10 +126,10 @@ const ImageColorPicker = ({ selectedTheme }) => {
     let c = hex.replace('#', '');
     if (c.length === 3) c = c.split('').map(x => x + x).join('');
     const num = parseInt(c, 16);
-    return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255})`;
+    return `rgb(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255})`;
   }
 
-  // 颜色提取函数（聚类版）
+  // 颜色提取函数（K-means版）
   const extractColors = (img) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -100,28 +137,43 @@ const ImageColorPicker = ({ selectedTheme }) => {
     canvas.height = img.naturalHeight;
     ctx.drawImage(img, 0, 0);
     const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    const colorMap = {};
+    const colorArr = [];
     for (let i = 0; i < data.length; i += 4 * 10) { // 步长10，降采样加速
       const r = data[i], g = data[i+1], b = data[i+2];
-      const key = `${r},${g},${b}`;
-      colorMap[key] = (colorMap[key] || 0) + 1;
+      colorArr.push([r, g, b]);
     }
     // palette 依然显示原始色块
+    const colorMap = {};
+    for (let i = 0; i < colorArr.length; i++) {
+      const key = colorArr[i].join(',');
+      colorMap[key] = (colorMap[key] || 0) + 1;
+    }
     const sorted = Object.entries(colorMap).sort((a, b) => b[1] - a[1]);
     const topColors = sorted.slice(0, 8).map(([rgb]) => {
       const [r, g, b] = rgb.split(',');
       return `rgb(${r}, ${g}, ${b})`;
     });
     setPalette(topColors);
-    // 聚类并按占比排序
-    const clusters = clusterColors(colorMap, 100);
-    const total = Object.values(colorMap).reduce((a, b) => a + b, 0);
+    // K-means聚类
+    const k = 10;
+    const clusters = kmeans(colorArr, k, 10);
+    const total = colorArr.length;
     const sortedClusters = clusters.sort((a, b) => b.ratio - a.ratio);
     setMainColors(sortedClusters.map(c => ({
       hex: c.hex,
       rgb: c.rgb,
       ratio: (c.ratio / total * 100).toFixed(1) // 百分比
     })));
+    // 默认选中第一个主色
+    setTimeout(() => {
+      if (sortedClusters.length > 0) {
+        setSelectedColor({
+          hex: sortedClusters[0].hex,
+          rgb: sortedClusters[0].rgb,
+          ratio: (sortedClusters[0].ratio / total * 100).toFixed(1)
+        });
+      }
+    }, 0);
   };
 
   // 处理图片选择
@@ -187,7 +239,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
     ctx.drawImage(imageRef.current, 0, 0);
     const pixel = ctx.getImageData(realX, realY, 1, 1).data;
     const hex = rgbToHex(`rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
-    const rgb = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+    const rgb = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
     setMarker({ left: markerLeft, top: markerTop, hex, rgb });
     setSelectedColor(null);
   };
