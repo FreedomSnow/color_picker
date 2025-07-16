@@ -34,6 +34,20 @@
     "hex": "HEX：",
     "rgb": "RGB："
   },
+  "colorPicker": {
+    "variations": "色彩变化",
+    "shades": "深色阶",
+    "tints": "浅色阶",
+    "combinations": "配色方案",
+    "comb": {
+      "complement": "互补色",
+      "split-complementary": "分裂互补",
+      "triadic": "三分色",
+      "analogous": "类似色",
+      "monochromatic": "单色",
+      "tetradic": "四方色"
+    }
+  },
   "recommendThemes": {
     "loading": "加载中...",
     "untitled": "未命名"

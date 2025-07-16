@@ -93,6 +93,8 @@ function getColorCombinations(h, s, b) {
 
 const ColorPicker = () => {
   const { i18n, t } = useTranslation();
+  const lang = i18n.language;
+  const getFontFamily = () => lang === 'zh' ? 'XiangCuiSong-Bold, Josefin Slab, serif' : 'Josefin Slab, XiangCuiSong-Bold, serif';
   const [forceUpdate, setForceUpdate] = useState(0);
   const [mode, setMode] = useState('RGBA');
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -464,11 +466,11 @@ const ColorPicker = () => {
           <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
             {/* 第一列：Variations（含色阶） */}
             <div className={styles.variations}>
-              <div className={styles.topTitle}>Variations</div>
+              <div className={styles.topTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.variations', 'Variations')}</div>
               <div className={styles.colorStepsWapper}>
                 {/* Shades 列：当前色到黑 */}
                 <div className={styles.colorSteps}>
-                  <div className={styles.secondTitle}>Shades</div>
+                  <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.shades', 'Shades')}</div>
                   {[...Array(11)].map((_, i) => {
                     const stepB = brightness * (1 - i / 10);
                     const [sr, sg, sb] = hsvToRgb(hue, saturation, stepB);
@@ -493,7 +495,7 @@ const ColorPicker = () => {
                 </div>
                 {/* Tints 列：当前色到白（Tints算法） */}
                 <div className={styles.colorSteps}>
-                  <div className={styles.secondTitle}>Tints</div>
+                  <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.tints', 'Tints')}</div>
                   {[...Array(11)].map((_, i) => {
                     const tintAmount = i / 10;
                     const [baseR, baseG, baseB] = hsvToRgb(hue, saturation, brightness);
@@ -523,10 +525,10 @@ const ColorPicker = () => {
             </div>
             {/* 第二列：Color Combinations */}
             <div className={styles.combinations}>
-              <div className={styles.topTitle}>Color Combinations</div>
+              <div className={styles.topTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.combinations', 'Color Combinations')}</div>
               {getColorCombinations(hue, saturation, brightness).map((comb, idx) => (
                 <div key={comb.name} style={{ marginBottom: 12 }}>
-                  <div className={styles.secondTitle}>{comb.name}</div>
+                  <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t(`colorPicker.comb.${comb.name.toLowerCase()}`, comb.name)}</div>
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
                     {comb.colors.map((c, i) => {
                       const [cr, cg, cb] = hsvToRgb(c.h, c.s, c.b);
