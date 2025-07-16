@@ -194,16 +194,16 @@ const ImageColorPicker = ({ selectedTheme }) => {
 
   return (
     <div className={styles.root}>
-      <div className={styles.top}>
-        {/* 左上：图片头部和图片上传区 */}
-        <div className={styles.topleft}>
+        {/* Left side: two rows */}
+        <div className={styles.leftPanel}>
+          {/* First row: image upload */}
+          <div className={styles.imageWapper}>
             <div className={styles.imageHeader}>
               <div className={styles.imageTitle}>{t('imagePicker.image')}</div>
               <div className={styles.imageActions}>
-                <button className={styles.actionBtn} title={t('imagePicker.position')}>
-                  {/* 定位图标 */}
+                {/* <button className={styles.actionBtn} title={t('imagePicker.position')}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07 7.07l-1.41-1.41M6.34 6.34L4.93 4.93m12.73 0l-1.41 1.41M6.34 17.66l-1.41 1.41"/></svg>
-                </button>
+                </button> */}
                 <button className={styles.changeImageBtn} title={t('imagePicker.changeImage')}  onClick={handleImageBoxClick}>
                   {/* 更换图片图标 */}
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 21l-6-6M21 21v-4M21 21h-4"/></svg>
@@ -212,7 +212,6 @@ const ImageColorPicker = ({ selectedTheme }) => {
             </div>
             <div
               className={`${styles.imageBox} ${dragActive ? styles.dragActive : ''}`}
-              // onClick={handleImageBoxClick} // 移除点击上传
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -263,52 +262,52 @@ const ImageColorPicker = ({ selectedTheme }) => {
                 onChange={handleFileChange}
               />
             </div>
-        </div>
-        {/* 右上：颜色信息面板 */}
-        <div className={styles.topright} style={{ marginLeft: 20 }}>
-          <div className={styles.colorsTitle}>{t('imagePicker.colors')}</div>
-          <div className={styles.colorsPanel}>
-            {marker ? (
-              <div className={styles.mainColorInfoPanel}>
-                <div className={styles.mainColorBlockVertical} style={{ background: marker.hex }}></div>
-                <div className={styles.mainColorTextPanel}>
-                  <div className={styles.mainColorHexText}>{t('imagePicker.hex', 'HEX:')} <span>{marker.hex.toUpperCase()}</span></div>
-                  <div className={styles.mainColorRgbText}>{t('imagePicker.rgb', 'RGB:')} <span>{marker.rgb}</span></div>
+          </div>
+          {/* Second row: colorsTitle and colorsPanel */}
+          <div>
+            <div className={styles.colorsTitle}>{t('imagePicker.colors')}</div>
+            <div className={styles.colorsPanel}>
+              {marker ? (
+                <div className={styles.mainColorInfoPanel}>
+                  <div className={styles.mainColorBlockVertical} style={{ background: marker.hex }}></div>
+                  <div className={styles.mainColorTextPanel}>
+                    <div className={styles.mainColorHexText}>{t('imagePicker.hex', 'HEX:')} <span>{marker.hex.toUpperCase()}</span></div>
+                    <div className={styles.mainColorRgbText}>{t('imagePicker.rgb', 'RGB:')} <span>{marker.rgb}</span></div>
+                  </div>
                 </div>
-              </div>
-            ) : (selectedColor || mainColors[0]) && (
-              <div className={styles.mainColorInfoPanel}>
-                <div className={styles.mainColorBlockVertical} style={{ background: (selectedColor || mainColors[0]).hex }}></div>
-                <div className={styles.mainColorTextPanel}>
-                  <div className={styles.mainColorHexText}>{t('imagePicker.hex', 'HEX:')} <span>{(selectedColor || mainColors[0]).hex.toUpperCase()}</span></div>
-                  <div className={styles.mainColorRgbText}>{t('imagePicker.rgb', 'RGB:')} <span>{(selectedColor || mainColors[0]).rgb}</span></div>
+              ) : (selectedColor || mainColors[0]) && (
+                <div className={styles.mainColorInfoPanel}>
+                  <div className={styles.mainColorBlockVertical} style={{ background: (selectedColor || mainColors[0]).hex }}></div>
+                  <div className={styles.mainColorTextPanel}>
+                    <div className={styles.mainColorHexText}>{t('imagePicker.hex', 'HEX:')} <span>{(selectedColor || mainColors[0]).hex.toUpperCase()}</span></div>
+                    <div className={styles.mainColorRgbText}>{t('imagePicker.rgb', 'RGB:')} <span>{(selectedColor || mainColors[0]).rgb}</span></div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      {/* 下方：色板标题和色板 */}
-      <div className={styles.bottom}>
-        <div className={styles.paletteTitle}>{t('imagePicker.colorPalette')}</div>
-        <div className={styles.paletteRow}>
-          {mainColors.map((c, i) => (
-            <div
-              className={
-                selectedColor && selectedColor.hex === c.hex
-                  ? `${styles.paletteColor} ${styles.paletteColorActive}`
-                  : styles.paletteColor
-              }
-              key={c.hex + i}
-              onClick={() => { setSelectedColor(c); setMarker(null); }}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className={styles.paletteBlock} style={{ background: c.hex }}></div>
-              <div className={styles.paletteHex}>{c.hex}</div>
-            </div>
-          ))}
+        {/* Right side: paletteTitle and paletteRow */}
+        <div style={{ flex: 1, marginLeft: 32, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+          <div className={styles.paletteTitle}>{t('imagePicker.colorPalette')}</div>
+          <div className={styles.paletteRow}>
+            {mainColors.map((c, i) => (
+              <div
+                className={
+                  selectedColor && selectedColor.hex === c.hex
+                    ? `${styles.paletteColor} ${styles.paletteColorActive}`
+                    : styles.paletteColor
+                }
+                key={c.hex + i}
+                onClick={() => { setSelectedColor(c); setMarker(null); }}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className={styles.paletteBlock} style={{ background: c.hex }}></div>
+                <div className={styles.paletteHex}>{c.hex}</div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
     </div>
   );
 };
