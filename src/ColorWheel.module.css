@@ -1,0 +1,151 @@
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    /* background: red; */
+  }
+  .leftPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 30px;
+    min-width: 340px;
+    max-width: 420px;
+    box-sizing: border-box;
+    /* background: yellow; */
+  }
+  .typePanel {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  /* Dropdown 样式自定义 */
+.dropdownWrapper {
+  position: relative;
+  display: inline-block;
+  margin-right: 16px;
+}
+
+.dropdownTitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.dropdownBtn {
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  transition: border 0.2s, box-shadow 0.2s;
+  /* background: red; */
+}
+.dropdownBtn:hover {
+  border: 1px solid black;
+  box-shadow: 0 4px 16px rgba(100,100,255,0.10);
+}
+
+.dropdownList {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  min-width: 100%;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  z-index: 10;
+  animation: dropdownIn 0.18s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-8px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.dropdownItem {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  color: black;
+  transition: background 0.18s, color 0.18s;
+}
+.dropdownItem:hover {
+  background: black;
+  color: white;
+}
+
+.colorWheelWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* background: lightcoral; */
+}
+.colorWheel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  border: 1px dashed rgb(155, 155, 155);
+  /* 色轮背景 */
+  background: conic-gradient(
+    #f00 0deg, #ff0 60deg, #0f0 120deg, #0ff 180deg, #00f 240deg, #f0f 300deg, #f00 360deg
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  margin: 32px 0px;
+}
+/* .buttonWrapper:first-child {
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.buttonWrapper:nth-child(2) {
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.buttonWrapper:last-child {
+  justify-content: space-between;
+  margin-bottom: 0;
+} */
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  background: #f5f6fa;
+  border: 1px dashed rgb(155, 155, 155);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px 18px;
+  transition: background 0.18s, border 0.18s;
+  color: #222;
+  gap: 6px;
+}
+.actionBtn svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+.actionBtn:hover {
+  background: #e6eaff;
+  border: 1.5px solid #3a5cff;
+}
+
+.rightPanel {
+  flex: 2;
+  background: #fafbfc;
+  border-left: 1px solid #eee;
+}
+ 
+  
