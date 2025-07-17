@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import RecommendThemes from './RecommendThemes';
 import ImageColorPicker from './ImageColorPicker';
 import ColorPicker from './ColorPicker';
+import ColorWheel from './ColorWheel';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -102,7 +103,7 @@ function App() {
               <ImageColorPicker selectedTheme={selectedTheme} />
             )}
             {selectedTab === 2 && <ColorPicker />}
-            {selectedTab === 3 && <div>{t('app.wheelContent')}</div>}
+            {selectedTab === 3 && <ColorWheel />}
           </div>
         </div>
       </div>
