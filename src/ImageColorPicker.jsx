@@ -109,6 +109,9 @@ const ImageColorPicker = ({ selectedTheme }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null); // palette 选中色块
   const [marker, setMarker] = useState(null); // {x, y, color}
+  const [kValue, setKValue] = useState(5); // K值，默认5
+  const [kInput, setKInput] = useState('5'); // 输入框受控
+  const [kError, setKError] = useState('');
 
   // 如果selectedTheme变化，自动显示图片和颜色
   useEffect(() => {
@@ -118,6 +121,8 @@ const ImageColorPicker = ({ selectedTheme }) => {
       setPalette(selectedTheme.colors || []);
       setMainColors((selectedTheme.colors || []).map(hex => ({ hex, rgb: hexToRgb(hex) })));
       setSelectedColor(null); // 切换主题时重置选中
+      setKInput(String(kValue));
+      setKError('');
     }
   }, [selectedTheme]);
 
@@ -130,7 +135,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
   }
 
   // 颜色提取函数（K-means版）
-  const extractColors = (img) => {
+  const extractColors = (img, k = kValue) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = img.naturalWidth;
@@ -155,7 +160,6 @@ const ImageColorPicker = ({ selectedTheme }) => {
     });
     setPalette(topColors);
     // K-means聚类
-    const k = 10;
     const clusters = kmeans(colorArr, k, 10);
     const total = colorArr.length;
     const sortedClusters = clusters.sort((a, b) => b.ratio - a.ratio);
@@ -213,7 +217,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
   };
   // 图片加载后提取主色
   const handleImgLoad = (e) => {
-    extractColors(e.target);
+    extractColors(e.target, kValue);
   };
 
   // 点击图片获取颜色
@@ -341,7 +345,94 @@ const ImageColorPicker = ({ selectedTheme }) => {
         </div>
         {/* Right side: paletteTitle and paletteRow */}
         <div style={{ flex: 1, marginLeft: 32, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-          <div className={styles.paletteTitle}>{t('imagePicker.colorPalette')}</div>
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <div className={styles.paletteTitle}>{t('imagePicker.colorPalette')}</div>
+            <label className={styles.kInputTitle} htmlFor="k-input">{t('imagePicker.kInputLabel')}</label>
+            <input
+              className={styles.kInput}
+              id="k-input"
+              type="number"
+              min={3}
+              max={20}
+              value={kInput}
+              placeholder={t('imagePicker.kInputPlaceholder')}
+              onChange={e => {
+                setKInput(e.target.value);
+                setKError('');
+              }}
+              onBlur={e => {
+                let v = Number(e.target.value);
+                if (!Number.isInteger(v) || v < 3 || v > 20) {
+                  setKError(t('imagePicker.kInputError'));
+                  setKInput(String(kValue));
+                  return;
+                }
+                setKValue(v);
+                setKInput(String(v));
+                setKError('');
+                // 重新聚类
+                if (imageRef.current) {
+                  // 重新聚类后，按marker状态决定选中逻辑
+                  const img = imageRef.current;
+                  const canvas = document.createElement('canvas');
+                  const ctx = canvas.getContext('2d');
+                  canvas.width = img.naturalWidth;
+                  canvas.height = img.naturalHeight;
+                  ctx.drawImage(img, 0, 0);
+                  const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                  const colorArr = [];
+                  for (let i = 0; i < data.length; i += 4 * 10) {
+                    const r = data[i], g = data[i+1], b = data[i+2];
+                    colorArr.push([r, g, b]);
+                  }
+                  // palette 依然显示原始色块
+                  const colorMap = {};
+                  for (let i = 0; i < colorArr.length; i++) {
+                    const key = colorArr[i].join(',');
+                    colorMap[key] = (colorMap[key] || 0) + 1;
+                  }
+                  const sorted = Object.entries(colorMap).sort((a, b) => b[1] - a[1]);
+                  const topColors = sorted.slice(0, 8).map(([rgb]) => {
+                    const [r, g, b] = rgb.split(',');
+                    return `rgb(${r}, ${g}, ${b})`;
+                  });
+                  setPalette(topColors);
+                  // K-means聚类
+                  const clusters = kmeans(colorArr, v, 10);
+                  const total = colorArr.length;
+                  const sortedClusters = clusters.sort((a, b) => b.ratio - a.ratio);
+                  setMainColors(sortedClusters.map(c => ({
+                    hex: c.hex,
+                    rgb: c.rgb,
+                    ratio: (c.ratio / total * 100).toFixed(1)
+                  })));
+                  // 选中逻辑
+                  setTimeout(() => {
+                    if (marker) {
+                      // marker存在，paletteRow无高亮，selectedColor=null
+                      setSelectedColor(null);
+                    } else {
+                      // marker为空，paletteRow第一个高亮，更新colorsTitle/colorsPanel
+                      if (sortedClusters.length > 0) {
+                        setSelectedColor({
+                          hex: sortedClusters[0].hex,
+                          rgb: sortedClusters[0].rgb,
+                          ratio: (sortedClusters[0].ratio / total * 100).toFixed(1)
+                        });
+                        setMarker(null);
+                      }
+                    }
+                  }, 0);
+                }
+              }}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.target.blur();
+                }
+              }}
+            />
+            {kError && <span className={styles.kInputErrorTitle}>{kError}</span>}
+          </div>
           <div className={styles.paletteRow}>
             {mainColors.map((c, i) => (
               <div

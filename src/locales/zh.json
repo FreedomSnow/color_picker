@@ -32,7 +32,10 @@
     "orDrag": "或拖拽图片到此处",
     "maxSize": "最大文件：15MB",
     "hex": "HEX：",
-    "rgb": "RGB："
+    "rgb": "RGB：",
+    "kInputLabel": "主色数量",
+    "kInputPlaceholder": "请输入3-20之间的数字",
+    "kInputError": "请输入3-20之间的数字"
   },
   "colorPicker": {
     "variations": "色彩变化",

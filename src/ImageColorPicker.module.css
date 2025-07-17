@@ -192,11 +192,32 @@
     margin: 0px 0 16px 0;
     color: #222b3a;
   }
+
+.kInputTitle {
+  margin: 0px 0 16px 0;
+  font-size: 14px;
+  color: rgb(50, 50, 50);
+}
+.kInput {
+  margin: 0px 0 16px 0;
+  width: 48px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px soild #ccc;
+  color: rgb(50, 50, 50);
+}
+
+.kInputErrorTitle {
+  color: red;
+  font-size: 12px;
+  margin: 0px 0 16px 0;
+}
   
   .paletteRow {
     display: flex;
     flex-wrap: wrap;
     gap: 18px;
+    margin-top: 8px;
     margin-bottom: 8px;
     cursor: pointer;
     justify-content: flex-start;
