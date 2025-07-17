@@ -112,6 +112,10 @@ const ImageColorPicker = ({ selectedTheme }) => {
   const [kValue, setKValue] = useState(5); // K值，默认5
   const [kInput, setKInput] = useState('5'); // 输入框受控
   const [kError, setKError] = useState('');
+  const [hoverPos, setHoverPos] = useState(null); // 鼠标悬停坐标
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  const [magnifierColor, setMagnifierColor] = useState({hex: '', rgb: ''});
+  const magnifierRef = useRef(null);
 
   // 如果selectedTheme变化，自动显示图片和颜色
   useEffect(() => {
@@ -248,6 +252,107 @@ const ImageColorPicker = ({ selectedTheme }) => {
     setSelectedColor(null);
   };
 
+  // 鼠标在图片上移动，显示十字准星和放大镜
+  const handleImageMouseMove = (e) => {
+    if (!imageRef.current) return;
+    const imgRect = imageRef.current.getBoundingClientRect();
+    const boxRect = imageRef.current.parentElement.getBoundingClientRect();
+    const x = e.clientX - imgRect.left;
+    const y = e.clientY - imgRect.top;
+    setHoverPos({ x, y, imgRect, boxRect });
+    setShowMagnifier(true);
+  };
+  const handleImageMouseLeave = () => {
+    setShowMagnifier(false);
+    setHoverPos(null);
+  };
+  const handleImageMouseEnter = () => {
+    setShowMagnifier(true);
+  };
+
+  // 放大镜绘制逻辑
+  useEffect(() => {
+    if (!showMagnifier || !hoverPos || !imageRef.current || !magnifierRef.current) return;
+    const img = imageRef.current;
+    const canvas = magnifierRef.current;
+    const ctx = canvas.getContext('2d');
+    // 放大镜参数
+    const zoom = 6; // 放大倍数
+    const size = 15; // 取样区域大小
+    const magSize = 90; // 放大镜canvas大小
+    // 计算真实像素坐标
+    const scaleX = img.naturalWidth / hoverPos.imgRect.width;
+    const scaleY = img.naturalHeight / hoverPos.imgRect.height;
+    const realX = Math.round(hoverPos.x * scaleX);
+    const realY = Math.round(hoverPos.y * scaleY);
+    // 取样区域左上角
+    const sx = Math.max(0, realX - Math.floor(size / 2));
+    const sy = Math.max(0, realY - Math.floor(size / 2));
+    // 清空
+    ctx.clearRect(0, 0, magSize, magSize);
+    // 绘制像素块放大内容
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(
+      img,
+      sx, sy, size, size,
+      0, 0, magSize, magSize
+    );
+    // 绘制中心小红色十字标
+    ctx.save();
+    ctx.strokeStyle = '#f44336';
+    ctx.lineWidth = 2;
+    ctx.shadowColor = '#fff';
+    ctx.shadowBlur = 3;
+    const center = magSize / 2;
+    const crossLen = 10; // 十字长度
+    ctx.beginPath();
+    ctx.moveTo(center - crossLen / 2, center);
+    ctx.lineTo(center + crossLen / 2, center);
+    ctx.moveTo(center, center - crossLen / 2);
+    ctx.lineTo(center, center + crossLen / 2);
+    ctx.stroke();
+    ctx.restore();
+    // 采样中心像素色值
+    const centerX = Math.floor(size / 2);
+    const centerY = Math.floor(size / 2);
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = img.naturalWidth;
+    tempCanvas.height = img.naturalHeight;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(img, 0, 0);
+    const pixel = tempCtx.getImageData(realX, realY, 1, 1).data;
+    const rgb = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+    const hex = rgbToHex(rgb);
+    setMagnifierColor({hex, rgb});
+  }, [showMagnifier, hoverPos]);
+
+  // 放大镜位置自适应计算
+  let magLeft = 0, magTop = 0, colorPanelTop = 0;
+  if (showMagnifier && hoverPos) {
+    const magSize = 90;
+    const margin = 8;
+    const boxWidth = hoverPos.imgRect.width;
+    const boxHeight = hoverPos.imgRect.height;
+    magLeft = hoverPos.x + (hoverPos.imgRect.left - hoverPos.boxRect.left) + 32;
+    magTop = hoverPos.y + (hoverPos.imgRect.top - hoverPos.boxRect.top) - 45;
+    // 右侧超出
+    if (hoverPos.x + 32 + magSize > boxWidth) {
+      magLeft = hoverPos.x + (hoverPos.imgRect.left - hoverPos.boxRect.left) - magSize - 16;
+    }
+    // 上方超出
+    if (hoverPos.y - 45 < 0) {
+      magTop = hoverPos.y + (hoverPos.imgRect.top - hoverPos.boxRect.top) + margin;
+    }
+    // 下方超出
+    if (hoverPos.y + margin + magSize > boxHeight) {
+      magTop = boxHeight - magSize - margin;
+    }
+    colorPanelTop = magTop + magSize + 4;
+    if (colorPanelTop + 28 > boxHeight) {
+      colorPanelTop = magTop - 28;
+    }
+  }
+
   return (
     <div className={styles.root}>
         {/* Left side: two rows */}
@@ -273,7 +378,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
               onDrop={handleDrop}
             >
               {!image && (
-                <div className={styles.uploadPanel}>
+                <div className={styles.uploadPanel} onClick={handleImageBoxClick} style={{cursor: 'pointer'}}>
                   <div className={styles.uploadIcon}>
                     <svg width="56" height="56" fill="none" stroke="#1976d2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 21l-6-6M21 21v-4M21 21h-4"/></svg>
                   </div>
@@ -291,15 +396,65 @@ const ImageColorPicker = ({ selectedTheme }) => {
                     className={styles.imagePreview}
                     onLoad={handleImgLoad}
                     onClick={handleImageClick}
+                    onMouseMove={handleImageMouseMove}
+                    onMouseLeave={handleImageMouseLeave}
+                    onMouseEnter={handleImageMouseEnter}
                     style={{cursor:'crosshair'}}
                   />
+                  {/* 移除跟随鼠标的蓝色十字准星SVG */}
+                  {/* 放大镜 */}
+                  {showMagnifier && hoverPos && (
+                    <>
+                      <canvas
+                        ref={magnifierRef}
+                        width={90}
+                        height={90}
+                        style={{
+                          position: 'absolute',
+                          left: magLeft,
+                          top: magTop,
+                          width: 90,
+                          height: 90,
+                          borderRadius: '50%',
+                          border: '3px solid #fff',
+                          boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+                          zIndex: 30,
+                          pointerEvents: 'none',
+                          background: '#fff',
+                        }}
+                      />
+                      {/* 放大镜下方色值 */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: magLeft,
+                          top: colorPanelTop,
+                          zIndex: 31,
+                          background: 'rgba(255,255,255,0.95)',
+                          color: '#222',
+                          fontSize: 12,
+                          padding: '2px 8px',
+                          borderRadius: 6,
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                          pointerEvents: 'none',
+                          whiteSpace: 'nowrap',
+                          border: '1px solid #eee',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {magnifierColor.hex} / {magnifierColor.rgb}
+                      </div>
+                    </>
+                  )}
+                  {/* marker图标 */}
                   {marker && (
                     <div style={{
                       position: 'absolute',
                       left: marker.left - 10,
                       top: marker.top - 20,
                       pointerEvents: 'none',
-                      zIndex: 10
+                      zIndex: 10,
+                      filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.35)) drop-shadow(0 0 2px #fff)'
                     }}>
                       {/* 地图大头针风格icon */}
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -345,7 +500,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
         </div>
         {/* Right side: paletteTitle and paletteRow */}
         <div style={{ flex: 1, marginLeft: 32, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-          <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <div style={{display:'flex',alignItems:'center',gap:6}}>
             <div className={styles.paletteTitle}>{t('imagePicker.colorPalette')}</div>
             <label className={styles.kInputTitle} htmlFor="k-input">{t('imagePicker.kInputLabel')}</label>
             <input

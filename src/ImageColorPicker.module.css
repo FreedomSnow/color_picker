@@ -194,17 +194,19 @@
   }
 
 .kInputTitle {
-  margin: 0px 0 16px 0;
+  margin: 0px 0 16px 8px;
   font-size: 14px;
   color: rgb(50, 50, 50);
+  /* background: yellow; */
 }
 .kInput {
   margin: 0px 0 16px 0;
-  width: 48px;
-  font-size: 14px;
+  border: 1px solid rgb(155, 155, 155);
   border-radius: 6px;
-  border: 1px soild #ccc;
-  color: rgb(50, 50, 50);
+  font-size: 14px;
+  width: 48px;
+  padding: 3px 3px 3px 8px;
+  /* background: red; */
 }
 
 .kInputErrorTitle {
