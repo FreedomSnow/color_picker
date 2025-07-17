@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './ImageColorPicker.module.css';
+import ReactDOM from 'react-dom';
 
 
 // rgb字符串转hex
@@ -259,7 +260,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
     const boxRect = imageRef.current.parentElement.getBoundingClientRect();
     const x = e.clientX - imgRect.left;
     const y = e.clientY - imgRect.top;
-    setHoverPos({ x, y, imgRect, boxRect });
+    setHoverPos({ x, y, imgRect, boxRect, clientX: e.clientX, clientY: e.clientY });
     setShowMagnifier(true);
   };
   const handleImageMouseLeave = () => {
@@ -326,29 +327,27 @@ const ImageColorPicker = ({ selectedTheme }) => {
     setMagnifierColor({hex, rgb});
   }, [showMagnifier, hoverPos]);
 
-  // 放大镜位置自适应计算
+  // 放大镜位置自适应计算（fixed定位，允许超出图片区域）
   let magLeft = 0, magTop = 0, colorPanelTop = 0;
   if (showMagnifier && hoverPos) {
     const magSize = 90;
     const margin = 8;
-    const boxWidth = hoverPos.imgRect.width;
-    const boxHeight = hoverPos.imgRect.height;
-    magLeft = hoverPos.x + (hoverPos.imgRect.left - hoverPos.boxRect.left) + 32;
-    magTop = hoverPos.y + (hoverPos.imgRect.top - hoverPos.boxRect.top) - 45;
+    magLeft = hoverPos.clientX + 32;
+    magTop = hoverPos.clientY - 45;
     // 右侧超出
-    if (hoverPos.x + 32 + magSize > boxWidth) {
-      magLeft = hoverPos.x + (hoverPos.imgRect.left - hoverPos.boxRect.left) - magSize - 16;
+    if (magLeft + magSize > window.innerWidth) {
+      magLeft = hoverPos.clientX - magSize - 16;
     }
     // 上方超出
-    if (hoverPos.y - 45 < 0) {
-      magTop = hoverPos.y + (hoverPos.imgRect.top - hoverPos.boxRect.top) + margin;
+    if (magTop < 0) {
+      magTop = hoverPos.clientY + margin;
     }
     // 下方超出
-    if (hoverPos.y + margin + magSize > boxHeight) {
-      magTop = boxHeight - magSize - margin;
+    if (magTop + magSize > window.innerHeight) {
+      magTop = window.innerHeight - magSize - margin;
     }
     colorPanelTop = magTop + magSize + 4;
-    if (colorPanelTop + 28 > boxHeight) {
+    if (colorPanelTop + 28 > window.innerHeight) {
       colorPanelTop = magTop - 28;
     }
   }
@@ -401,16 +400,15 @@ const ImageColorPicker = ({ selectedTheme }) => {
                     onMouseEnter={handleImageMouseEnter}
                     style={{cursor:'crosshair'}}
                   />
-                  {/* 移除跟随鼠标的蓝色十字准星SVG */}
                   {/* 放大镜 */}
-                  {showMagnifier && hoverPos && (
+                  {showMagnifier && hoverPos && ReactDOM.createPortal(
                     <>
                       <canvas
                         ref={magnifierRef}
                         width={90}
                         height={90}
                         style={{
-                          position: 'absolute',
+                          position: 'fixed',
                           left: magLeft,
                           top: magTop,
                           width: 90,
@@ -418,7 +416,7 @@ const ImageColorPicker = ({ selectedTheme }) => {
                           borderRadius: '50%',
                           border: '3px solid #fff',
                           boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
-                          zIndex: 30,
+                          zIndex: 3000,
                           pointerEvents: 'none',
                           background: '#fff',
                         }}
@@ -426,10 +424,10 @@ const ImageColorPicker = ({ selectedTheme }) => {
                       {/* 放大镜下方色值 */}
                       <div
                         style={{
-                          position: 'absolute',
+                          position: 'fixed',
                           left: magLeft,
                           top: colorPanelTop,
-                          zIndex: 31,
+                          zIndex: 3001,
                           background: 'rgba(255,255,255,0.95)',
                           color: '#222',
                           fontSize: 12,
@@ -444,7 +442,8 @@ const ImageColorPicker = ({ selectedTheme }) => {
                       >
                         {magnifierColor.hex} / {magnifierColor.rgb}
                       </div>
-                    </>
+                    </>,
+                    document.body
                   )}
                   {/* marker图标 */}
                   {marker && (

@@ -202,11 +202,13 @@
 .kInput {
   margin: 0px 0 16px 0;
   border: 1px solid rgb(155, 155, 155);
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 14px;
   width: 48px;
+  height: 14px;
   padding: 3px 3px 3px 8px;
-  /* background: red; */
+  color: black;
+  background: white;
 }
 
 .kInputErrorTitle {

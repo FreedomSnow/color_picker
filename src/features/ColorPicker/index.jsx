@@ -39,6 +39,18 @@ function rgbToHsv(r, g, b) {
   return [Math.round(h * 359), Math.round(s * 100), Math.round(v * 100)];
 }
 
+function hexToRgb(hex) {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  if (c.length !== 6) return null;
+  const num = parseInt(c, 16);
+  return [
+    (num >> 16) & 255,
+    (num >> 8) & 255,
+    num & 255
+  ];
+}
+
 const DEFAULT_H = 0, DEFAULT_S = 50, DEFAULT_B = 50, DEFAULT_A = 1;
 
 // 配色算法工具
@@ -189,10 +201,10 @@ const ColorPicker = () => {
   // svThumb位置
   const svPanelRect = svPanelRef.current ? svPanelRef.current.getBoundingClientRect() : {width: 0, height: 0};
   const svThumbLeft = svPanelRect.width > 0
-    ? (s / 100) * svPanelRect.width
+    ? Math.max(0, Math.min((s / 100) * svPanelRect.width, svPanelRect.width))
     : '50%';
   const svThumbTop = svPanelRect.height > 0
-    ? svPanelRect.height - (b / 100) * svPanelRect.height
+    ? Math.max(0, Math.min(svPanelRect.height - (b / 100) * svPanelRect.height, svPanelRect.height))
     : '50%';
 
   // svPanel拖拽/点击
@@ -203,8 +215,11 @@ const ColorPicker = () => {
     let y = clientY - rect.top;
     x = Math.max(0, Math.min(x, rect.width));
     y = Math.max(0, Math.min(y, rect.height));
-    setSaturation(Math.round((x / rect.width) * 100));
-    setBrightness(Math.round(100 - (y / rect.height) * 100));
+    // 用float计算，set时再四舍五入，保证和thumb定位对称
+    const s = rect.width > 0 ? (x / rect.width) * 100 : 0;
+    const b = rect.height > 0 ? 100 - (y / rect.height) * 100 : 50;
+    setSaturation(Math.max(0, Math.min(100, Math.round(s))));
+    setBrightness(Math.max(0, Math.min(100, Math.round(b))));
   };
   const handleSvPanelMouseDown = (e) => {
     if (e.button !== 0) return;
@@ -231,15 +246,6 @@ const ColorPicker = () => {
   const handleSvPanelClick = (e) => {
     handleSvPanelMove(e.clientX, e.clientY);
   };
-
-  // hue变化时svThumb回到中间
-  useEffect(() => {
-    if (prevHueRef.current !== hue) {
-      setSaturation(DEFAULT_S);
-      setBrightness(DEFAULT_B);
-      prevHueRef.current = hue;
-    }
-  }, [hue]);
 
   // svPanel首次渲染后，强制设置svThumb到中间
   useLayoutEffect(() => {
@@ -297,6 +303,37 @@ const ColorPicker = () => {
   const currentOption = MODE_OPTIONS.find(opt => opt.key === mode);
   const values = mode === 'HSBA' ? hsbaVals : rgbaVals;
 
+  // HEX输入受控状态
+  const [hexInput, setHexInput] = useState(hex.toUpperCase());
+  // 同步主色变化到输入框
+  useEffect(() => {
+    setHexInput(hex.toUpperCase());
+  }, [hex]);
+
+  // 处理HEX输入
+  const handleHexInputChange = (e) => {
+    let val = e.target.value.toUpperCase();
+    // 保证第一个字符为#
+    if (!val.startsWith('#')) val = '#' + val.replace(/#/g, '');
+    // 只允许0-9A-F
+    val = '#' + val.slice(1).replace(/[^0-9A-F]/g, '');
+    // 最多6位
+    if (val.length > 7) val = val.slice(0, 7);
+    setHexInput(val);
+  };
+  // 应用HEX输入
+  const applyHexInput = () => {
+    if (!/^#[0-9A-F]{6}$/.test(hexInput)) return;
+    const rgb = hexToRgb(hexInput);
+    if (!rgb) return;
+    const [nr, ng, nb] = rgb;
+    const [nh, ns, nbri] = rgbToHsv(nr, ng, nb);
+    setHue(nh);
+    setSaturation(ns);
+    setBrightness(nbri);
+    setRgbaInputs([nr, ng, nb, alpha]);
+  };
+
   // RGBA输入受控状态（只影响UI，不影响主色盘逻辑）
   const [rgbaInputs, setRgbaInputs] = useState([r, g, bl, a]);
   // 标记是否是用户主动输入，避免死循环
@@ -323,7 +360,7 @@ const ColorPicker = () => {
   // 正确顺序：底层为hue纯色，中间黑色透明渐变（下黑上透明），最上层白色透明渐变（左白右透明）
   const svPanelBg = `
     linear-gradient(90deg, #fff, transparent),
-    linear-gradient(0deg, transparent, #000),
+    linear-gradient(180deg, transparent, #000),
     hsl(${hue}, 100%, 50%)
   `;
 
@@ -337,48 +374,39 @@ const ColorPicker = () => {
             ref={svPanelRef}
             style={{
               background: svPanelBg.trim().replace(/\s+/g, ' '),
+              position: 'relative', // 确保thumb绝对定位
             }}
             onMouseDown={handleSvPanelMouseDown}
             onClick={handleSvPanelClick}
             onTouchStart={e => { setSvDragging(true); handleSvPanelMove(e.touches[0].clientX, e.touches[0].clientY); }}
           >
-            {(svPanelRect.width > 0 && svPanelRect.height > 0) ? (
-              <div
-                className={styles.svThumb}
-                style={{
-                  left: svThumbLeft,
-                  top: svThumbTop,
-                  transform: 'translate(-50%, -50%)',
-                  background: `rgb(${r},${g},${bl})`,
-                  position: 'absolute',
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                  border: '2px solid #fff',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}
-              ></div>
-            ) : (
-              <div
-                className={styles.svThumb}
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  background: `rgb(${r},${g},${bl})`,
-                  position: 'absolute',
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                  border: '2px solid #fff',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
-                  cursor: 'pointer',
-                  zIndex: 2,
-                  transform: 'translate(-50%, -50%)'
-                }}
-              ></div>
-            )}
+            {/* svThumb 控件 */}
+            <div
+              className={styles.svThumb}
+              style={{
+                position: 'absolute',
+                left: typeof svThumbLeft === 'number' ? svThumbLeft : '50%',
+                top: typeof svThumbTop === 'number' ? svThumbTop : '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 24,
+                height: 24,
+                borderRadius: '50%',
+                border: '2px solid #fff',
+                boxShadow: '0 0 4px rgba(0,0,0,0.15)',
+                background: `rgb(${r},${g},${bl})`,
+                cursor: 'pointer',
+                zIndex: 2,
+              }}
+              onMouseDown={e => {
+                e.stopPropagation();
+                if (e.button !== 0) return;
+                setSvDragging(true);
+              }}
+              onTouchStart={e => {
+                e.stopPropagation();
+                setSvDragging(true);
+              }}
+            ></div>
           </div>
           {/* 2. hueSliderWapper: same width as svPanel */}
           <div className={styles.hueSliderWapper}>
@@ -405,9 +433,15 @@ const ColorPicker = () => {
             <div className={styles.valueHexTitle}>HEX</div>
             <input
               className={styles.valueHexInput}
-              value={hex.toUpperCase()}
-              onChange={() => {}} // 逻辑不变
-              readOnly
+              value={hexInput}
+              onChange={handleHexInputChange}
+              onBlur={applyHexInput}
+              onKeyDown={e => { 
+                if (e.key === 'Enter') {
+                  applyHexInput(); 
+                  e.target.blur();
+                }
+              }}
             />
             <div className={styles.hexColorBlock} style={{background: hex}}></div>
           </div>
