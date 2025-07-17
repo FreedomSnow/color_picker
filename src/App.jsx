@@ -71,7 +71,7 @@ function App() {
                 ))}
               </div>
             )}
-            <button className={styles.contactBtn} onClick={() => changeLanguage('zh')}>
+            <button className={styles.contactBtn}>
               {t('app.contact')}
             </button>
           </div>
