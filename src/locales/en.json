@@ -24,7 +24,7 @@
     "image": "Image",
     "position": "Position",
     "changeImage": "Change Image",
-    "colorPalette": "Color Palette",
+    "colorPalette": "Palette",
     "colors": "Colors",
     "useYourImage": "Use Your Image",
     "copy": "Copy",
@@ -32,7 +32,10 @@
     "orDrag": "Or Drag And Drop",
     "maxSize": "Max File Size: 15 MB",
     "hex": "HEX:",
-    "rgb": "RGB:"
+    "rgb": "RGB:",
+    "kInputLabel": "Number of Colors",
+    "kInputPlaceholder": "Enter a number between 3 and 20",
+    "kInputError": "Please enter a number between 3 and 20"
   },
   "colorPicker": {
     "variations": "Variations",
