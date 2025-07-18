@@ -17,38 +17,44 @@
   /* 禁止滚动 */
   overscroll-behavior: none;
 }
+
 body {
   background: white;
   font-family: 'Josefin Slab', serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
 .content {
   background: white;
   border-radius: 40px;
   width: 100%;
   flex: 1;
   margin: 0;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
-} 
+}
+
 .topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 32px 48px 0 48px;
 }
+
 .logo {
   font-weight: bold;
   font-size: 1.5rem;
   letter-spacing: 0px;
-  color: rgb(74,74,74);
+  color: rgb(74, 74, 74);
 }
+
 .logoTitle {
   font-family: 'Monoton', cursive;
   letter-spacing: 2px;
 }
+
 .nav button {
   margin: 0 8px;
   background: #fff;
@@ -59,16 +65,19 @@ body {
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .nav button:hover {
   background: #f0f0f0;
 }
+
 .rightBar {
   display: flex;
   align-items: center;
   gap: 16px;
 }
+
 .rightBar button {
-  background: rgb(73,73,73);
+  background: rgb(73, 73, 73);
   border: 1px solid #fff;
   border-radius: 20px;
   color: #fff;
@@ -77,10 +86,12 @@ body {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
+
 .rightBar button:hover {
   background: black;
   /* font-size: 1.25rem; */
 }
+
 .connectBtn {
   background: #222;
   color: #fff;
@@ -89,6 +100,7 @@ body {
   border: none;
   cursor: pointer;
 }
+
 .verticalTabs {
   display: flex;
   flex-direction: column;
@@ -97,14 +109,16 @@ body {
   margin-right: 48px;
   position: relative;
 }
-.tabCard, .tabCardActive {
+
+.tabCard,
+.tabCardActive {
   border-radius: 20px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.09);
   padding: 26px 36px 16px 16px;
   font-size: 1.22rem;
   color: #888;
   cursor: pointer;
-  border: 1px dashed rgb(50,50,50);
+  border: 1px dashed rgb(50, 50, 50);
   text-align: left;
   background: #fff;
   margin-top: -20px;
@@ -120,39 +134,46 @@ body {
   min-width: 180px;
   overflow: hidden;
 }
-.tabCard:first-child, .tabCardActive:first-child {
+
+.tabCard:first-child,
+.tabCardActive:first-child {
   margin-top: 0;
 }
+
 .tabCardActive {
-  background: rgba(245,239,235,0.8);
+  background: rgba(245, 239, 235, 0.8);
   color: black;
   border: 1px solid rgb(50, 50, 50);
   font-weight: bold;
   transform: scale(1.08);
   z-index: 2;
 }
+
 .tabCard:hover {
   color: #222;
   border-color: black;
   z-index: 1;
 }
+
 .tabCardTitle {
   font-size: 1.15rem;
   font-weight: bold;
   margin-bottom: 10px;
-  color: rgb(73,73,73);
+  color: rgb(73, 73, 73);
 }
+
 .tabCardDesc {
   font-size: 0.95rem;
-  color: rgb(133,133,133);
+  color: rgb(133, 133, 133);
   line-height: 1.4;
 }
+
 .tabContent {
   flex: 1;
   min-height: 320px;
   background: #fff;
   border-radius: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   /* padding: 40px 32px; */
   display: flex;
   align-items: flex-start;
@@ -163,8 +184,9 @@ body {
   overflow-y: hidden;
   overflow-x: auto;
   box-sizing: border-box;
-  border: 1px dashed rgb(155,155,155);
+  border: 1px dashed rgb(155, 155, 155);
 }
+
 .mainContent {
   display: flex;
   flex-direction: row;
@@ -177,12 +199,15 @@ body {
   /* 新增：高度撑满底部 */
   flex: 1 1 auto;
   min-height: 0;
-  height: calc(100vh - 120px); /* 120px 预留顶部导航高度，可根据实际调整 */
+  height: calc(100vh - 120px);
+  /* 120px 预留顶部导航高度，可根据实际调整 */
   box-sizing: border-box;
 }
+
 .left {
   max-width: 40%;
 }
+
 /* .highlight {
   color: #ff9900;
 } */
@@ -193,17 +218,20 @@ body {
   align-items: center;
   gap: 8px;
 }
+
 .desc {
   margin-top: 16px;
   color: #888;
   font-size: 0.95rem;
 }
+
 .right {
   max-width: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .imagePlaceholder {
   width: 350px;
   height: 350px;
@@ -215,6 +243,7 @@ body {
   font-size: 2rem;
   color: #bbb;
 }
+
 .bottomRight {
   position: absolute;
   right: 48px;
@@ -227,26 +256,35 @@ body {
   align-items: center;
   gap: 8px;
 }
+
 .contactBtn {
-  background: rgb(73,73,73);
+  background: rgb(73, 73, 73);
   color: #fff;
-  border: 1px solid rgb(73,73,73);
+  border: 1px solid rgb(73, 73, 73);
   border-radius: 20px;
   padding: 8px 20px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
+
 .languageBtn {
   background: #fff !important;
-  color: rgb(73,73,73) !important;
-  border: 1px solid rgb(73,73,73) !important;
+  color: rgb(73, 73, 73) !important;
+  border: 1px solid rgb(73, 73, 73) !important;
   border-radius: 20px;
   padding: 8px 20px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
+
 .languageDropdown {
   position: absolute;
   left: 0;
@@ -255,11 +293,12 @@ body {
   background: #fff;
   border: 1px solid #eee;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   min-width: 120px;
   z-index: 100;
   padding: 8px 0;
 }
+
 .languageDropdownItem {
   padding: 10px 24px;
   cursor: pointer;
@@ -267,6 +306,7 @@ body {
   font-size: 1rem;
   transition: background 0.2s, color 0.2s;
 }
+
 .languageDropdownItem:hover {
   background: #f5f5f5;
   color: #222;

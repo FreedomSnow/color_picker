@@ -15,6 +15,7 @@
     },
     "language": "English",
     "contact": "Contact Us",
+    "contactMessage": "Contact us: example@email.com\n\nWe welcome feedback and suggestions!",
     "themeContent": "Here is the recommended theme content",
     "imageContent": "Here is the image picker content",
     "colorContent": "Here is the color picker content",
@@ -24,7 +25,7 @@
     "image": "Image",
     "position": "Position",
     "changeImage": "Change Image",
-    "colorPalette": "Color Palette",
+    "colorPalette": "Palette",
     "colors": "Colors",
     "useYourImage": "Use Your Image",
     "copy": "Copy",
@@ -32,10 +33,45 @@
     "orDrag": "Or Drag And Drop",
     "maxSize": "Max File Size: 15 MB",
     "hex": "HEX:",
-    "rgb": "RGB:"
+    "rgb": "RGB:",
+    "kInputLabel": "Number of Colors",
+    "kInputPlaceholder": "Enter a number between 3 and 20",
+    "kInputError": "Please enter a number between 3 and 20"
+  },
+  "colorPicker": {
+    "variations": "Variations",
+    "shades": "Shades",
+    "tints": "Tints",
+    "combinations": "Color Combinations",
+    "comb": {
+      "complement": "Complement",
+      "split-complementary": "Split-complementary",
+      "triadic": "Triadic",
+      "analogous": "Analogous",
+      "monochromatic": "Monochromatic",
+      "tetradic": "Tetradic"
+    }
   },
   "recommendThemes": {
     "loading": "Loading...",
     "untitled": "Untitled"
+  },
+  "contactUs": {
+    "title": "Contact Us",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "subject": "Subject",
+    "subjectPlaceholder": "Enter feedback subject",
+    "message": "Message",
+    "messagePlaceholder": "Please describe your issue or suggestion in detail...",
+    "contactInfo": "Contact Information",
+    "emailInfo": "Email: example@email.com",
+    "responseTime": "We will respond to your message within 24 hours",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitSuccess": "Thank you for your feedback! We will get back to you soon.",
+    "submitError": "Submission failed, please try again later"
   }
 } 
