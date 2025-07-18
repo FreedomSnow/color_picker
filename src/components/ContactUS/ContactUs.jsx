@@ -133,11 +133,6 @@ const ContactUs = ({ isOpen, onClose }) => {
             />
           </div>
 
-          <div className={styles.contactInfo}>
-            <h3>{t('contactUs.contactInfo')}</h3>
-            <p>{t('contactUs.emailInfo')}</p>
-            <p>{t('contactUs.responseTime')}</p>
-          </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.cancelBtn} onClick={handleCancel}>
