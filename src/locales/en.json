@@ -15,6 +15,7 @@
     },
     "language": "English",
     "contact": "Contact Us",
+    "contactMessage": "Contact us: example@email.com\n\nWe welcome feedback and suggestions!",
     "themeContent": "Here is the recommended theme content",
     "imageContent": "Here is the image picker content",
     "colorContent": "Here is the color picker content",
@@ -54,5 +55,23 @@
   "recommendThemes": {
     "loading": "Loading...",
     "untitled": "Untitled"
+  },
+  "contactUs": {
+    "title": "Contact Us",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "subject": "Subject",
+    "subjectPlaceholder": "Enter feedback subject",
+    "message": "Message",
+    "messagePlaceholder": "Please describe your issue or suggestion in detail...",
+    "contactInfo": "Contact Information",
+    "emailInfo": "Email: example@email.com",
+    "responseTime": "We will respond to your message within 24 hours",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitSuccess": "Thank you for your feedback! We will get back to you soon.",
+    "submitError": "Submission failed, please try again later"
   }
 } 
