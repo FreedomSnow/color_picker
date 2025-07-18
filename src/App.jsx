@@ -5,7 +5,7 @@ import RecommendThemes from './RecommendThemes';
 import ImageColorPicker from './ImageColorPicker';
 import ColorPicker from './ColorPicker';
 import ColorWheel from './ColorWheel';
-import ContactUs from './components/ContactUs';
+import ContactUs from './components/ContactUS/ContactUs';
 
 function App() {
   const { t, i18n } = useTranslation();
