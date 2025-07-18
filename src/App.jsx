@@ -5,12 +5,14 @@ import RecommendThemes from './RecommendThemes';
 import ImageColorPicker from './ImageColorPicker';
 import ColorPicker from './ColorPicker';
 import ColorWheel from './ColorWheel';
+import ContactUs from './components/ContactUs';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedTheme, setSelectedTheme] = useState(null); // 新增
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const tabList = [
     { title: t('app.tab.theme'), desc: t('app.desc.theme') },
@@ -71,7 +73,10 @@ function App() {
                 ))}
               </div>
             )}
-            <button className={styles.contactBtn}>
+            <button 
+              className={styles.contactBtn}
+              onClick={() => setContactModalOpen(true)}
+            >
               {t('app.contact')}
             </button>
           </div>
@@ -107,6 +112,11 @@ function App() {
           </div>
         </div>
       </div>
+      
+      <ContactUs 
+        isOpen={contactModalOpen} 
+        onClose={() => setContactModalOpen(false)} 
+      />
     </div>
   );
 }
