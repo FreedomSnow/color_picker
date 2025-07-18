@@ -71,6 +71,7 @@
     "responseTime": "We will respond to your message within 24 hours",
     "cancel": "Cancel",
     "submit": "Submit",
-    "submitSuccess": "Thank you for your feedback! We will get back to you soon."
+    "submitSuccess": "Thank you for your feedback! We will get back to you soon.",
+    "submitError": "Submission failed, please try again later"
   }
 } 

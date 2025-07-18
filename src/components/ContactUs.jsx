@@ -19,18 +19,43 @@ const ContactUs = ({ isOpen, onClose }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 这里可以添加提交逻辑，比如发送到服务器
-    console.log('提交的联系信息:', formData);
-    alert(t('contactUs.submitSuccess'));
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-    onClose();
+    
+    // 按照指定格式组合content
+    const content = `${formData.name}\n\n${formData.subject}\n\n${formData.message}`;
+    
+    // 创建FormData对象
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append('title', '["colorpicker"]');
+    formDataToSubmit.append('contact', formData.email);
+    formDataToSubmit.append('content', content);
+    
+    try {
+      const response = await fetch('http://43.138.115.192:3000/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: formDataToSubmit
+      });
+      
+      if (response.ok) {
+        alert(t('contactUs.submitSuccess'));
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        onClose();
+      } else {
+        alert(t('contactUs.submitError') || '提交失败，请稍后重试');
+      }
+    } catch (error) {
+      console.error('提交错误:', error);
+      alert(t('contactUs.submitError') || '提交失败，请稍后重试');
+    }
   };
 
   const handleCancel = () => {

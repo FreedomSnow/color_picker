@@ -71,6 +71,7 @@
     "responseTime": "我们会在24小时内回复您的消息",
     "cancel": "取消",
     "submit": "提交",
-    "submitSuccess": "感谢您的反馈！我们会尽快回复您。"
+    "submitSuccess": "感谢您的反馈！我们会尽快回复您。",
+    "submitError": "提交失败，请稍后重试"
   }
 } 
