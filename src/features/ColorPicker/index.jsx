@@ -108,29 +108,36 @@ const ColorPicker = () => {
   const lang = i18n.language;
   const getFontFamily = () => lang === 'zh' ? 'XiangCuiSong-Bold, Josefin Slab, serif' : 'Josefin Slab, XiangCuiSong-Bold, serif';
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [mode, setMode] = useState('RGBA');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const [incrementInput, setIncrementInput] = useState('10');
-  const [shadeTintIncrements, setShadeTintIncrements] = useState([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 0.9]);
+  // 获取初始状态
+  function getInitialState() {
+    const saved = localStorage.getItem('colorPickerState');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {}
+    }
+    return {};
+  }
 
-  // 色相（hue）状态，0-359
-  const [hue, setHue] = useState(DEFAULT_H);
+  const initial = getInitialState();
+
+  const [hue, setHue] = useState(initial.hue ?? DEFAULT_H);
+  const [saturation, setSaturation] = useState(initial.saturation ?? DEFAULT_S);
+  const [brightness, setBrightness] = useState(initial.brightness ?? DEFAULT_B);
+  const [alpha, setAlpha] = useState(initial.alpha ?? DEFAULT_A);
+  const [incrementInput, setIncrementInput] = useState(initial.incrementInput ?? '10');
+  const [mode, setMode] = useState(initial.mode ?? 'HSBA');
+
   // 拖动状态
   const [dragging, setDragging] = useState(false);
   const hueSliderRef = useRef(null);
-
-  // 新增：saturation/brightness拖拽
-  const [saturation, setSaturation] = useState(DEFAULT_S);
-  const [brightness, setBrightness] = useState(DEFAULT_B);
   // 记录上一次hue
   const prevHueRef = useRef(DEFAULT_H);
   const svPanelRef = useRef(null);
   const [svDragging, setSvDragging] = useState(false);
-
-  // 新增：alpha拖拽
-  const [alpha, setAlpha] = useState(DEFAULT_A);
   const alphaSliderRef = useRef(null);
   const [alphaDragging, setAlphaDragging] = useState(false);
 
@@ -140,6 +147,17 @@ const ColorPicker = () => {
   const hex = rgbToHex(r, g, bl);
 
   // 色阶/色调的步长
+  const step = parseFloat(incrementInput) * 0.01;
+  const newIncrements = [];
+  if (step > 0) {
+    for (let i = 1; i <= 10; i++) {
+      const increment = parseFloat((i * step).toPrecision(15));
+      if (increment > 1.0) break;
+      newIncrements.push(increment);
+      if (increment === 1.0) break;
+    }
+  }
+  const [shadeTintIncrements, setShadeTintIncrements] = useState(newIncrements.length ? newIncrements : [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 0.9]);
   const shadeAndTintSteps = [0, ...shadeTintIncrements];
 
   // 处理下拉关闭
@@ -286,11 +304,11 @@ const ColorPicker = () => {
   };
 
   // svPanel首次渲染后，强制设置svThumb到中间
-  useLayoutEffect(() => {
-    setSaturation(DEFAULT_S);
-    setBrightness(DEFAULT_B);
-    setHue(DEFAULT_H); // 保证首次加载hue为0（红色）
-  }, []);
+  // useLayoutEffect(() => {
+  //   setSaturation(DEFAULT_S);
+  //   setBrightness(DEFAULT_B);
+  //   setHue(DEFAULT_H); // 保证首次加载hue为0（红色）
+  // }, []);
 
   // 计算hueThumb位置
   const hueThumbLeft = hueSliderRef.current
@@ -342,7 +360,7 @@ const ColorPicker = () => {
   const values = mode === 'HSBA' ? hsbaVals : rgbaVals;
 
   // HEX输入受控状态
-  const [hexInput, setHexInput] = useState(hex.toUpperCase());
+  const [hexInput, setHexInput] = useState(initial.hexInput ?? hex.toUpperCase());
   // 同步主色变化到输入框
   useEffect(() => {
     setHexInput(hex.toUpperCase());
@@ -373,7 +391,7 @@ const ColorPicker = () => {
   };
 
   // RGBA输入受控状态（只影响UI，不影响主色盘逻辑）
-  const [rgbaInputs, setRgbaInputs] = useState([r, g, bl, a]);
+  const [rgbaInputs, setRgbaInputs] = useState(initial.rgbaInputs ?? [r, g, bl, a]);
   // 标记是否是用户主动输入，避免死循环
   const userInputRef = useRef(false);
   // 同步主色变化到输入框
@@ -401,6 +419,14 @@ const ColorPicker = () => {
     linear-gradient(180deg, transparent, #000),
     hsl(${hue}, 100%, 50%)
   `;
+
+  // 保存所有状态
+  useEffect(() => {
+    const stateToSave = {
+      hue, saturation, brightness, alpha, mode, incrementInput, rgbaInputs, hexInput
+    };
+    localStorage.setItem('colorPickerState', JSON.stringify(stateToSave));
+  }, [hue, saturation, brightness, alpha, mode, incrementInput, rgbaInputs, hexInput]);
 
   return (
     <div className={styles.container}>
