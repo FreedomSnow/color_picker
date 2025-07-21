@@ -1,11 +1,11 @@
 import styles from "./App.module.css";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
-import RecommendThemes from './RecommendThemes';
-import ImageColorPicker from './ImageColorPicker';
-import ColorPicker from './ColorPicker';
-import ColorWheel from './ColorWheel';
-import ContactUs from './components/ContactUS/ContactUs';
+import RecommendThemes from '../features/RecommendThemes';
+import ImageColorPicker from '../features/ImageColorPicker';
+import ColorPicker from '../features/ColorPicker';
+import ColorWheel from '../features/ColorWheel';
+import ContactUs from '../components/common/ContactUs';
 
 function App() {
   const { t, i18n } = useTranslation();

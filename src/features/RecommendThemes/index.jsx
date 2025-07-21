@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './RecommendThemes.module.css';
-import themesData from './data/themes.json';
+import themesData from '../../config/data/themes.json';
 
 // 缓存变量
 let cachedThemes = null;
@@ -24,7 +24,6 @@ const getTextColor = (backgroundColor) => {
 const RecommendThemes = ({ onThemeSelect }) => {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [forceUpdate, setForceUpdate] = useState(0);
   const { i18n, t } = useTranslation();
   const currentLanguage = i18n.language;
 
@@ -59,7 +58,8 @@ const RecommendThemes = ({ onThemeSelect }) => {
   // 监听语言变化
   useEffect(() => {
     const handleLanguageChange = () => {
-      setForceUpdate(prev => prev + 1);
+      // 强制重新渲染
+      setThemes([...themes]);
     };
 
     i18n.on('languageChanged', handleLanguageChange);
@@ -67,7 +67,7 @@ const RecommendThemes = ({ onThemeSelect }) => {
     return () => {
       i18n.off('languageChanged', handleLanguageChange);
     };
-  }, [i18n]);
+  }, [i18n, themes]);
 
   // 获取当前语言的标题
   const getLocalizedTitle = (titleObj) => {
@@ -111,4 +111,4 @@ const RecommendThemes = ({ onThemeSelect }) => {
   );
 };
 
-export default RecommendThemes; 
+export default RecommendThemes;

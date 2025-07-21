@@ -50,7 +50,7 @@ jobs:
       - name: 设置部署路径
         id: set-path
         run: |
-          echo "DEPLOY_PATH=/var/www/colorpicker.icu" >> $GITHUB_OUTPUT
+          echo "DEPLOY_PATH=/var/www/colorpicker" >> $GITHUB_OUTPUT
       
       - name: 压缩构建文件
         run: |
