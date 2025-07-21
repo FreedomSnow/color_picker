@@ -11,10 +11,10 @@ jobs:
     
     steps:
       - name: 检出代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: 设置 Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
@@ -50,9 +50,7 @@ jobs:
       - name: 设置部署路径
         id: set-path
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/release" ]]; then
-            echo "DEPLOY_PATH=/var/www/colorpicker.icu" >> $GITHUB_OUTPUT
-          fi
+          echo "DEPLOY_PATH=/var/www/colorpicker.icu" >> $GITHUB_OUTPUT
       
       - name: 压缩构建文件
         run: |
@@ -68,12 +66,18 @@ jobs:
           DEPLOY_PATH: ${{ steps.set-path.outputs.DEPLOY_PATH }}
         run: |
           echo "上传压缩文件到服务器"
-          scp dist.tar.gz "${SERVER_USER}@${SERVER_IP}:/tmp/dist.tar.gz"
+          if ! scp dist.tar.gz "${SERVER_USER}@${SERVER_IP}:/tmp/dist.tar.gz"; then
+            echo "错误: 文件上传失败"
+            exit 1
+          fi
           
           echo "在服务器上解压文件并部署"
-          ssh "${SERVER_USER}@${SERVER_IP}" "sudo rm -rf ${DEPLOY_PATH}/* && \
+          if ! ssh "${SERVER_USER}@${SERVER_IP}" "sudo rm -rf ${DEPLOY_PATH}/* && \
             sudo mkdir -p ${DEPLOY_PATH} && \
             sudo tar -xzf /tmp/dist.tar.gz -C ${DEPLOY_PATH} && \
             sudo chown -R www-data:www-data ${DEPLOY_PATH} && \
             sudo rm -f /tmp/dist.tar.gz && \
-            echo '部署完成'" 
+            echo '部署完成'"; then
+            echo "错误: 服务器部署失败"
+            exit 1
+          fi 
