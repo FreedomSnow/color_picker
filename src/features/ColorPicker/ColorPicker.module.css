@@ -29,7 +29,7 @@
   border: 1px dashed rgb(155, 155, 155);
   border-radius: 16px;
 }
-.svThumb {
+/* .svThumb {
   position: absolute;
   width: 28px;
   height: 28px;
@@ -37,7 +37,7 @@
   border: 2px solid #fff;
   pointer-events: none;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-}
+} */
 
 .hueSliderWapper {
   padding: 20px 15px;
@@ -82,12 +82,13 @@
 }
 .valueHexInput {
   font-size: 18px;
-  font-weight: 600;
+  height: 12px;
   letter-spacing: 1px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 16px;
   padding: 8px 10px;
   color: rgb(50, 50, 50);
+  background: white;
 }
 .hexColorBlock {
   width: 50px;
@@ -117,14 +118,14 @@
 }
 .rgbaInput {
   width: 50px;
+  height: 22px;
+  border-radius: 16px;
   font-size: 18px;
-  font-weight: 600;
   letter-spacing: 1px;
   border: 1px solid #ccc;
-  border-radius: 6px;
   padding: 2px 10px;
   color: rgb(50, 50, 50);
-  /* background: #fff; */
+  background: white;
 }
 .rgbaSlider {
   flex: 1;
@@ -223,6 +224,17 @@
   border-left: 1px dashed #e0e0e0;
   /* border: 1px dashed rgb(155, 155, 155); */
   /* background: yellow; */
+}
+.incrementInput {
+  width: 30px;
+  font-size: 12px;
+  text-align: center;
+  color: rgb(50, 50, 50);
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  background: white;
 }
 .colorStepsWapper {
   width: 220px;

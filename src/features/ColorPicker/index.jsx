@@ -39,6 +39,18 @@ function rgbToHsv(r, g, b) {
   return [Math.round(h * 359), Math.round(s * 100), Math.round(v * 100)];
 }
 
+function hexToRgb(hex) {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  if (c.length !== 6) return null;
+  const num = parseInt(c, 16);
+  return [
+    (num >> 16) & 255,
+    (num >> 8) & 255,
+    num & 255
+  ];
+}
+
 const DEFAULT_H = 0, DEFAULT_S = 50, DEFAULT_B = 50, DEFAULT_A = 1;
 
 // 配色算法工具
@@ -96,26 +108,36 @@ const ColorPicker = () => {
   const lang = i18n.language;
   const getFontFamily = () => lang === 'zh' ? 'XiangCuiSong-Bold, Josefin Slab, serif' : 'Josefin Slab, XiangCuiSong-Bold, serif';
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [mode, setMode] = useState('RGBA');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // 色相（hue）状态，0-359
-  const [hue, setHue] = useState(DEFAULT_H);
+  // 获取初始状态
+  function getInitialState() {
+    const saved = localStorage.getItem('colorPickerState');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {}
+    }
+    return {};
+  }
+
+  const initial = getInitialState();
+
+  const [hue, setHue] = useState(initial.hue ?? DEFAULT_H);
+  const [saturation, setSaturation] = useState(initial.saturation ?? DEFAULT_S);
+  const [brightness, setBrightness] = useState(initial.brightness ?? DEFAULT_B);
+  const [alpha, setAlpha] = useState(initial.alpha ?? DEFAULT_A);
+  const [incrementInput, setIncrementInput] = useState(initial.incrementInput ?? '10');
+  const [mode, setMode] = useState(initial.mode ?? 'HSBA');
+
   // 拖动状态
   const [dragging, setDragging] = useState(false);
   const hueSliderRef = useRef(null);
-
-  // 新增：saturation/brightness拖拽
-  const [saturation, setSaturation] = useState(DEFAULT_S);
-  const [brightness, setBrightness] = useState(DEFAULT_B);
   // 记录上一次hue
   const prevHueRef = useRef(DEFAULT_H);
   const svPanelRef = useRef(null);
   const [svDragging, setSvDragging] = useState(false);
-
-  // 新增：alpha拖拽
-  const [alpha, setAlpha] = useState(DEFAULT_A);
   const alphaSliderRef = useRef(null);
   const [alphaDragging, setAlphaDragging] = useState(false);
 
@@ -123,6 +145,20 @@ const ColorPicker = () => {
   const s = saturation, b = brightness, a = alpha;
   const [r, g, bl] = hsvToRgb(hue, s, b);
   const hex = rgbToHex(r, g, bl);
+
+  // 色阶/色调的步长
+  const step = parseFloat(incrementInput) * 0.01;
+  const newIncrements = [];
+  if (step > 0) {
+    for (let i = 1; i <= 10; i++) {
+      const increment = parseFloat((i * step).toPrecision(15));
+      if (increment > 1.0) break;
+      newIncrements.push(increment);
+      if (increment === 1.0) break;
+    }
+  }
+  const [shadeTintIncrements, setShadeTintIncrements] = useState(newIncrements.length ? newIncrements : [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 0.9]);
+  const shadeAndTintSteps = [0, ...shadeTintIncrements];
 
   // 处理下拉关闭
   useEffect(() => {
@@ -147,6 +183,38 @@ const ColorPicker = () => {
     i18n.on('languageChanged', handleLanguageChange);
     return () => { i18n.off('languageChanged', handleLanguageChange); };
   }, [i18n]);
+
+  const handleIncrementChange = (e) => {
+    let val = e.target.value;
+    // Allow empty string or a valid number format
+    if (val === '' || /^\d*\.?\d{0,1}$/.test(val)) {
+        if (parseFloat(val) > 100) {
+            val = '100';
+        }
+        setIncrementInput(val);
+    }
+  };
+  
+  const applyIncrementChange = () => {
+    let value = parseFloat(incrementInput);
+    if (isNaN(value) || value < 0 || value > 100) {
+        value = 10; // Reset to default if invalid
+    }
+    const formattedValue = String(Math.round(value * 10) / 10);
+    setIncrementInput(formattedValue);
+  
+    const step = parseFloat(formattedValue) * 0.01;
+    const newIncrements = [];
+    if (step > 0) {
+        for (let i = 1; i <= 10; i++) {
+            const increment = parseFloat((i * step).toPrecision(15));
+            if (increment > 1.0) break;
+            newIncrements.push(increment);
+            if (increment === 1.0) break;
+        }
+    }
+    setShadeTintIncrements(newIncrements);
+  };
 
   // 拖动hueThumb
   useEffect(() => {
@@ -189,10 +257,10 @@ const ColorPicker = () => {
   // svThumb位置
   const svPanelRect = svPanelRef.current ? svPanelRef.current.getBoundingClientRect() : {width: 0, height: 0};
   const svThumbLeft = svPanelRect.width > 0
-    ? (s / 100) * svPanelRect.width
+    ? Math.max(0, Math.min((s / 100) * svPanelRect.width, svPanelRect.width))
     : '50%';
   const svThumbTop = svPanelRect.height > 0
-    ? svPanelRect.height - (b / 100) * svPanelRect.height
+    ? Math.max(0, Math.min(svPanelRect.height - (b / 100) * svPanelRect.height, svPanelRect.height))
     : '50%';
 
   // svPanel拖拽/点击
@@ -203,8 +271,11 @@ const ColorPicker = () => {
     let y = clientY - rect.top;
     x = Math.max(0, Math.min(x, rect.width));
     y = Math.max(0, Math.min(y, rect.height));
-    setSaturation(Math.round((x / rect.width) * 100));
-    setBrightness(Math.round(100 - (y / rect.height) * 100));
+    // 用float计算，set时再四舍五入，保证和thumb定位对称
+    const s = rect.width > 0 ? (x / rect.width) * 100 : 0;
+    const b = rect.height > 0 ? 100 - (y / rect.height) * 100 : 50;
+    setSaturation(Math.max(0, Math.min(100, Math.round(s))));
+    setBrightness(Math.max(0, Math.min(100, Math.round(b))));
   };
   const handleSvPanelMouseDown = (e) => {
     if (e.button !== 0) return;
@@ -232,21 +303,12 @@ const ColorPicker = () => {
     handleSvPanelMove(e.clientX, e.clientY);
   };
 
-  // hue变化时svThumb回到中间
-  useEffect(() => {
-    if (prevHueRef.current !== hue) {
-      setSaturation(DEFAULT_S);
-      setBrightness(DEFAULT_B);
-      prevHueRef.current = hue;
-    }
-  }, [hue]);
-
   // svPanel首次渲染后，强制设置svThumb到中间
-  useLayoutEffect(() => {
-    setSaturation(DEFAULT_S);
-    setBrightness(DEFAULT_B);
-    setHue(DEFAULT_H); // 保证首次加载hue为0（红色）
-  }, []);
+  // useLayoutEffect(() => {
+  //   setSaturation(DEFAULT_S);
+  //   setBrightness(DEFAULT_B);
+  //   setHue(DEFAULT_H); // 保证首次加载hue为0（红色）
+  // }, []);
 
   // 计算hueThumb位置
   const hueThumbLeft = hueSliderRef.current
@@ -297,8 +359,39 @@ const ColorPicker = () => {
   const currentOption = MODE_OPTIONS.find(opt => opt.key === mode);
   const values = mode === 'HSBA' ? hsbaVals : rgbaVals;
 
+  // HEX输入受控状态
+  const [hexInput, setHexInput] = useState(initial.hexInput ?? hex.toUpperCase());
+  // 同步主色变化到输入框
+  useEffect(() => {
+    setHexInput(hex.toUpperCase());
+  }, [hex]);
+
+  // 处理HEX输入
+  const handleHexInputChange = (e) => {
+    let val = e.target.value.toUpperCase();
+    // 保证第一个字符为#
+    if (!val.startsWith('#')) val = '#' + val.replace(/#/g, '');
+    // 只允许0-9A-F
+    val = '#' + val.slice(1).replace(/[^0-9A-F]/g, '');
+    // 最多6位
+    if (val.length > 7) val = val.slice(0, 7);
+    setHexInput(val);
+  };
+  // 应用HEX输入
+  const applyHexInput = () => {
+    if (!/^#[0-9A-F]{6}$/.test(hexInput)) return;
+    const rgb = hexToRgb(hexInput);
+    if (!rgb) return;
+    const [nr, ng, nb] = rgb;
+    const [nh, ns, nbri] = rgbToHsv(nr, ng, nb);
+    setHue(nh);
+    setSaturation(ns);
+    setBrightness(nbri);
+    setRgbaInputs([nr, ng, nb, alpha]);
+  };
+
   // RGBA输入受控状态（只影响UI，不影响主色盘逻辑）
-  const [rgbaInputs, setRgbaInputs] = useState([r, g, bl, a]);
+  const [rgbaInputs, setRgbaInputs] = useState(initial.rgbaInputs ?? [r, g, bl, a]);
   // 标记是否是用户主动输入，避免死循环
   const userInputRef = useRef(false);
   // 同步主色变化到输入框
@@ -323,9 +416,17 @@ const ColorPicker = () => {
   // 正确顺序：底层为hue纯色，中间黑色透明渐变（下黑上透明），最上层白色透明渐变（左白右透明）
   const svPanelBg = `
     linear-gradient(90deg, #fff, transparent),
-    linear-gradient(0deg, transparent, #000),
+    linear-gradient(180deg, transparent, #000),
     hsl(${hue}, 100%, 50%)
   `;
+
+  // 保存所有状态
+  useEffect(() => {
+    const stateToSave = {
+      hue, saturation, brightness, alpha, mode, incrementInput, rgbaInputs, hexInput
+    };
+    localStorage.setItem('colorPickerState', JSON.stringify(stateToSave));
+  }, [hue, saturation, brightness, alpha, mode, incrementInput, rgbaInputs, hexInput]);
 
   return (
     <div className={styles.container}>
@@ -337,48 +438,39 @@ const ColorPicker = () => {
             ref={svPanelRef}
             style={{
               background: svPanelBg.trim().replace(/\s+/g, ' '),
+              position: 'relative', // 确保thumb绝对定位
             }}
             onMouseDown={handleSvPanelMouseDown}
             onClick={handleSvPanelClick}
             onTouchStart={e => { setSvDragging(true); handleSvPanelMove(e.touches[0].clientX, e.touches[0].clientY); }}
           >
-            {(svPanelRect.width > 0 && svPanelRect.height > 0) ? (
-              <div
-                className={styles.svThumb}
-                style={{
-                  left: svThumbLeft,
-                  top: svThumbTop,
-                  transform: 'translate(-50%, -50%)',
-                  background: `rgb(${r},${g},${bl})`,
-                  position: 'absolute',
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                  border: '2px solid #fff',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}
-              ></div>
-            ) : (
-              <div
-                className={styles.svThumb}
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  background: `rgb(${r},${g},${bl})`,
-                  position: 'absolute',
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                  border: '2px solid #fff',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
-                  cursor: 'pointer',
-                  zIndex: 2,
-                  transform: 'translate(-50%, -50%)'
-                }}
-              ></div>
-            )}
+            {/* svThumb 控件 */}
+            <div
+              className={styles.svThumb}
+              style={{
+                position: 'absolute',
+                left: typeof svThumbLeft === 'number' ? svThumbLeft : '50%',
+                top: typeof svThumbTop === 'number' ? svThumbTop : '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 24,
+                height: 24,
+                borderRadius: '50%',
+                border: '2px solid #fff',
+                boxShadow: '0 0 4px rgba(0,0,0,0.15)',
+                background: `rgb(${r},${g},${bl})`,
+                cursor: 'pointer',
+                zIndex: 2,
+              }}
+              onMouseDown={e => {
+                e.stopPropagation();
+                if (e.button !== 0) return;
+                setSvDragging(true);
+              }}
+              onTouchStart={e => {
+                e.stopPropagation();
+                setSvDragging(true);
+              }}
+            ></div>
           </div>
           {/* 2. hueSliderWapper: same width as svPanel */}
           <div className={styles.hueSliderWapper}>
@@ -405,9 +497,15 @@ const ColorPicker = () => {
             <div className={styles.valueHexTitle}>HEX</div>
             <input
               className={styles.valueHexInput}
-              value={hex.toUpperCase()}
-              onChange={() => {}} // 逻辑不变
-              readOnly
+              value={hexInput}
+              onChange={handleHexInputChange}
+              onBlur={applyHexInput}
+              onKeyDown={e => { 
+                if (e.key === 'Enter') {
+                  applyHexInput(); 
+                  e.target.blur();
+                }
+              }}
             />
             <div className={styles.hexColorBlock} style={{background: hex}}></div>
           </div>
@@ -466,13 +564,31 @@ const ColorPicker = () => {
           <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
             {/* 第一列：Variations（含色阶） */}
             <div className={styles.variations}>
-              <div className={styles.topTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.variations', 'Variations')}</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div className={styles.topTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.variations', 'Variations')}</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    className={styles.incrementInput}
+                    type="text"
+                    value={incrementInput}
+                    onChange={handleIncrementChange}
+                    onBlur={applyIncrementChange}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        applyIncrementChange();
+                        e.target.blur();
+                      }
+                    }}
+                  />
+                  <span style={{ fontSize: '12px',marginBottom: '5px' }}>%</span>
+                </div>
+              </div>
               <div className={styles.colorStepsWapper}>
                 {/* Shades 列：当前色到黑 */}
                 <div className={styles.colorSteps}>
                   <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.shades', 'Shades')}</div>
-                  {[...Array(11)].map((_, i) => {
-                    const stepB = brightness * (1 - i / 10);
+                  {shadeAndTintSteps.map((amount, i) => {
+                    const stepB = brightness * (1 - amount);
                     const [sr, sg, sb] = hsvToRgb(hue, saturation, stepB);
                     const stepHex = rgbToHex(sr, sg, sb);
                     const brightnessVal = (sr * 299 + sg * 587 + sb * 114) / 1000;
@@ -496,8 +612,7 @@ const ColorPicker = () => {
                 {/* Tints 列：当前色到白（Tints算法） */}
                 <div className={styles.colorSteps}>
                   <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.tints', 'Tints')}</div>
-                  {[...Array(11)].map((_, i) => {
-                    const tintAmount = i / 10;
+                  {shadeAndTintSteps.map((tintAmount, i) => {
                     const [baseR, baseG, baseB] = hsvToRgb(hue, saturation, brightness);
                     const sr = Math.round(baseR + (255 - baseR) * tintAmount);
                     const sg = Math.round(baseG + (255 - baseG) * tintAmount);

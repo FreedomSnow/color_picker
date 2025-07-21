@@ -27,10 +27,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 0px 0px 0px;
   height: 190px;
   width: 160px;
   min-width: 0;
+  border: 1px dashed rgb(155, 155, 155);
 }
 
 .image {
