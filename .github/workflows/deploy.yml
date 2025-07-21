@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'release'
-      - 'dev'
 
 jobs:
   build-and-deploy:
@@ -52,9 +51,7 @@ jobs:
         id: set-path
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/release" ]]; then
-            echo "DEPLOY_PATH=/var/www/colorpicker.icu/html" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "DEPLOY_PATH=/var/www/dev.colorpicker.icu/html" >> $GITHUB_OUTPUT
+            echo "DEPLOY_PATH=/var/www/colorpicker.icu" >> $GITHUB_OUTPUT
           fi
       
       - name: 压缩构建文件
