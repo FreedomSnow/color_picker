@@ -39,7 +39,7 @@
     "kInputError": "请输入3-20之间的数字"
   },
   "colorPicker": {
-    "variations": "色彩变化",
+    "variations": "渐变",
     "shades": "深色阶",
     "tints": "浅色阶",
     "combinations": "配色方案",

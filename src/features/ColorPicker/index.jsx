@@ -112,6 +112,9 @@ const ColorPicker = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const [incrementInput, setIncrementInput] = useState('10');
+  const [shadeTintIncrements, setShadeTintIncrements] = useState([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 0.9]);
+
   // 色相（hue）状态，0-359
   const [hue, setHue] = useState(DEFAULT_H);
   // 拖动状态
@@ -136,6 +139,9 @@ const ColorPicker = () => {
   const [r, g, bl] = hsvToRgb(hue, s, b);
   const hex = rgbToHex(r, g, bl);
 
+  // 色阶/色调的步长
+  const shadeAndTintSteps = [0, ...shadeTintIncrements];
+
   // 处理下拉关闭
   useEffect(() => {
     function handleClickOutside(event) {
@@ -159,6 +165,38 @@ const ColorPicker = () => {
     i18n.on('languageChanged', handleLanguageChange);
     return () => { i18n.off('languageChanged', handleLanguageChange); };
   }, [i18n]);
+
+  const handleIncrementChange = (e) => {
+    let val = e.target.value;
+    // Allow empty string or a valid number format
+    if (val === '' || /^\d*\.?\d{0,1}$/.test(val)) {
+        if (parseFloat(val) > 100) {
+            val = '100';
+        }
+        setIncrementInput(val);
+    }
+  };
+  
+  const applyIncrementChange = () => {
+    let value = parseFloat(incrementInput);
+    if (isNaN(value) || value < 0 || value > 100) {
+        value = 10; // Reset to default if invalid
+    }
+    const formattedValue = String(Math.round(value * 10) / 10);
+    setIncrementInput(formattedValue);
+  
+    const step = parseFloat(formattedValue) * 0.01;
+    const newIncrements = [];
+    if (step > 0) {
+        for (let i = 1; i <= 10; i++) {
+            const increment = parseFloat((i * step).toPrecision(15));
+            if (increment > 1.0) break;
+            newIncrements.push(increment);
+            if (increment === 1.0) break;
+        }
+    }
+    setShadeTintIncrements(newIncrements);
+  };
 
   // 拖动hueThumb
   useEffect(() => {
@@ -500,13 +538,31 @@ const ColorPicker = () => {
           <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
             {/* 第一列：Variations（含色阶） */}
             <div className={styles.variations}>
-              <div className={styles.topTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.variations', 'Variations')}</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div className={styles.topTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.variations', 'Variations')}</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    className={styles.incrementInput}
+                    type="text"
+                    value={incrementInput}
+                    onChange={handleIncrementChange}
+                    onBlur={applyIncrementChange}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        applyIncrementChange();
+                        e.target.blur();
+                      }
+                    }}
+                  />
+                  <span style={{ fontSize: '12px',marginBottom: '5px' }}>%</span>
+                </div>
+              </div>
               <div className={styles.colorStepsWapper}>
                 {/* Shades 列：当前色到黑 */}
                 <div className={styles.colorSteps}>
                   <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.shades', 'Shades')}</div>
-                  {[...Array(11)].map((_, i) => {
-                    const stepB = brightness * (1 - i / 10);
+                  {shadeAndTintSteps.map((amount, i) => {
+                    const stepB = brightness * (1 - amount);
                     const [sr, sg, sb] = hsvToRgb(hue, saturation, stepB);
                     const stepHex = rgbToHex(sr, sg, sb);
                     const brightnessVal = (sr * 299 + sg * 587 + sb * 114) / 1000;
@@ -530,8 +586,7 @@ const ColorPicker = () => {
                 {/* Tints 列：当前色到白（Tints算法） */}
                 <div className={styles.colorSteps}>
                   <div className={styles.secondTitle} style={{ fontFamily: getFontFamily() }}>{t('colorPicker.tints', 'Tints')}</div>
-                  {[...Array(11)].map((_, i) => {
-                    const tintAmount = i / 10;
+                  {shadeAndTintSteps.map((tintAmount, i) => {
                     const [baseR, baseG, baseB] = hsvToRgb(hue, saturation, brightness);
                     const sr = Math.round(baseR + (255 - baseR) * tintAmount);
                     const sg = Math.round(baseG + (255 - baseG) * tintAmount);

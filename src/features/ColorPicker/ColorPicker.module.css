@@ -225,6 +225,17 @@
   /* border: 1px dashed rgb(155, 155, 155); */
   /* background: yellow; */
 }
+.incrementInput {
+  width: 30px;
+  font-size: 12px;
+  text-align: center;
+  color: rgb(50, 50, 50);
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  background: white;
+}
 .colorStepsWapper {
   width: 220px;
   gap: 20px;
