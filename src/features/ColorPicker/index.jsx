@@ -361,6 +361,7 @@ const ColorPicker = () => {
 
   // HEX输入受控状态
   const [hexInput, setHexInput] = useState(initial.hexInput ?? hex.toUpperCase());
+  const hexInputRef = useRef(null);
   // 同步主色变化到输入框
   useEffect(() => {
     setHexInput(hex.toUpperCase());
@@ -379,6 +380,8 @@ const ColorPicker = () => {
   };
   // 应用HEX输入
   const applyHexInput = () => {
+    // 打印输入框内容
+    console.log('HEX输入框内容:', hexInput);
     if (!/^#[0-9A-F]{6}$/.test(hexInput)) return;
     const rgb = hexToRgb(hexInput);
     if (!rgb) return;
@@ -388,6 +391,11 @@ const ColorPicker = () => {
     setSaturation(ns);
     setBrightness(nbri);
     setRgbaInputs([nr, ng, nb, alpha]);
+    setHexInput(hexInput); // 保证输入框内容为选中颜色
+    // 选中输入框内容
+    if (hexInputRef.current) {
+      hexInputRef.current.select();
+    }
   };
 
   // RGBA输入受控状态（只影响UI，不影响主色盘逻辑）
@@ -498,6 +506,7 @@ const ColorPicker = () => {
             <input
               className={styles.valueHexInput}
               value={hexInput}
+              ref={hexInputRef}
               onChange={handleHexInputChange}
               onBlur={applyHexInput}
               onKeyDown={e => { 
@@ -511,7 +520,7 @@ const ColorPicker = () => {
           </div>
           {/* 4. valueLabelWrap: 4 rows, R/G/B/A, input + slider */}
           <div className={styles.rgbaRows}>
-            {['R','G','B','A'].map((label, idx) => {
+            {['R','G','B'].map((label, idx) => {
               // 滑杆高亮色
               const accent = idx === 0 ? '#f00' : idx === 1 ? '#0f0' : idx === 2 ? '#00f' : '#222';
               const min = idx < 3 ? 0 : 0;
@@ -668,4 +677,4 @@ const ColorPicker = () => {
   );
 };
 
-export default ColorPicker; 
+export default ColorPicker;
