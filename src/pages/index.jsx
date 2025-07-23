@@ -5,6 +5,7 @@ import RecommendThemes from '../features/RecommendThemes';
 import ImageColorPicker from '../features/ImageColorPicker';
 import ColorPicker from '../features/ColorPicker';
 import ColorWheel from '../features/ColorWheel';
+import ToolsPanel from '../features/Tools/ToolsPanel';
 import ContactUs from '../components/common/ContactUs';
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
     { title: t('app.tab.theme'), desc: t('app.desc.theme') },
     { title: t('app.tab.image'), desc: t('app.desc.image') },
     { title: t('app.tab.color'), desc: t('app.desc.color') },
-    { title: t('app.tab.wheel'), desc: t('app.desc.wheel') },
+    // { title: t('app.tab.wheel'), desc: t('app.desc.wheel') },
+    { title: t('app.tab.tools'), desc: t('app.desc.tools') },
   ];
   const languages = [
     { code: 'zh', label: t('app.language', { lng: 'zh' }) },
@@ -108,7 +110,8 @@ function App() {
               <ImageColorPicker selectedTheme={selectedTheme} />
             )}
             {selectedTab === 2 && <ColorPicker />}
-            {selectedTab === 3 && <ColorWheel />}
+            {/* {selectedTab === 3 && <ColorWheel />} */}
+            {selectedTab === 3 && <ToolsPanel />}
           </div>
         </div>
       </div>
