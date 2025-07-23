@@ -387,11 +387,25 @@ const ColorPicker = () => {
     if (!rgb) return;
     const [nr, ng, nb] = rgb;
     const [nh, ns, nbri] = rgbToHsv(nr, ng, nb);
-    setHue(nh);
+    setHexInput(hexInput); // 保证输入框内容为选中颜色
+    // 判断svPanel是否有匹配颜色
+    let foundMatch = false;
+    if (svPanelRef.current) {
+      // 取svPanel当前色（主色）
+      const [curR, curG, curB] = hsvToRgb(hue, saturation, brightness);
+      const curHex = rgbToHex(curR, curG, curB);
+      // 容差范围（允许HEX有微小差异）
+      if (curHex === hexInput) {
+        foundMatch = true;
+      }
+    }
+    setRgbaInputs([nr, ng, nb, alpha]);
     setSaturation(ns);
     setBrightness(nbri);
-    setRgbaInputs([nr, ng, nb, alpha]);
-    setHexInput(hexInput); // 保证输入框内容为选中颜色
+    // 只有没有匹配时才更新hue
+    if (!foundMatch) {
+      setHue(nh);
+    }
     // 选中输入框内容
     if (hexInputRef.current) {
       hexInputRef.current.select();
@@ -400,25 +414,44 @@ const ColorPicker = () => {
 
   // RGBA输入受控状态（只影响UI，不影响主色盘逻辑）
   const [rgbaInputs, setRgbaInputs] = useState(initial.rgbaInputs ?? [r, g, bl, a]);
+  // 分别标记R/G/B输入框是否正在编辑
+  const [editingR, setEditingR] = useState(false);
+  const [editingG, setEditingG] = useState(false);
+  const [editingB, setEditingB] = useState(false);
   // 标记是否是用户主动输入，避免死循环
   const userInputRef = useRef(false);
-  // 同步主色变化到输入框
+  // 只在主色变化时同步到输入框，不在编辑时实时同步
   useEffect(() => {
-    if (!userInputRef.current) {
+    // 只有未编辑时才同步主色盘到输入框
+    if (!editingR && !editingG && !editingB && !userInputRef.current) {
       setRgbaInputs([r, g, bl, a]);
     }
-  }, [r, g, bl, a]);
-  // 监听rgbaInputs变化，反向驱动主色盘
-  useEffect(() => {
-    if (!userInputRef.current) return;
-    const [nr, ng, nb, na] = rgbaInputs;
+  }, [r, g, bl, a, editingR, editingG, editingB]);
+  // 监听rgbaInputs变化，只有失焦时才反向驱动主色盘
+  const handleRgbaInputBlur = (idx, value) => {
+    // 失焦时才更新主色盘，但不自动修改输入框内容
+    let newInputs = [...rgbaInputs];
+    // 只对A通道允许空变为0，R/G/B保持用户输入
+    if (idx === 3 && value === '') newInputs[idx] = 0;
+    else newInputs[idx] = value === '' ? '' : Number(value);
+    const [nr, ng, nb, na] = [
+      newInputs[0] === '' ? 0 : Number(newInputs[0]),
+      newInputs[1] === '' ? 0 : Number(newInputs[1]),
+      newInputs[2] === '' ? 0 : Number(newInputs[2]),
+      newInputs[3] === '' ? 0 : Number(newInputs[3])
+    ];
     const [nh, ns, nbri] = rgbToHsv(nr, ng, nb);
     setHue(nh);
     setSaturation(ns);
     setBrightness(nbri);
     setAlpha(na);
+    setRgbaInputs(newInputs);
     userInputRef.current = false;
-  }, [rgbaInputs]);
+    // 失焦后清除编辑标记
+    if (idx === 0) setEditingR(false);
+    if (idx === 1) setEditingG(false);
+    if (idx === 2) setEditingB(false);
+  };
 
   // svPanel背景色相渐变
   // 正确顺序：底层为hue纯色，中间黑色透明渐变（下黑上透明），最上层白色透明渐变（左白右透明）
@@ -515,6 +548,18 @@ const ColorPicker = () => {
                   e.target.blur();
                 }
               }}
+              onMouseDown={e => {
+                // 只有鼠标点击时允许获取焦点
+                // 其他情况不自动 focus
+                // 这里不需要特殊处理，默认行为即可
+              }}
+              tabIndex={-1}
+              onFocus={e => {
+                // 如果不是鼠标事件触发的 focus，则立即 blur
+                if (!e.nativeEvent || e.nativeEvent.detail === 0) {
+                  e.target.blur();
+                }
+              }}
             />
             <div className={styles.hexColorBlock} style={{background: hex}}></div>
           </div>
@@ -525,23 +570,49 @@ const ColorPicker = () => {
               const accent = idx === 0 ? '#f00' : idx === 1 ? '#0f0' : idx === 2 ? '#00f' : '#222';
               const min = idx < 3 ? 0 : 0;
               const max = idx < 3 ? 255 : 1;
-              const step = idx < 3 ? 1 : 0.01;
+              // const step = idx < 3 ? 1 : 0.01;
               const percent = ((rgbaInputs[idx] - min) / (max - min)) * 100;
+              // 编辑标记
+              const editingFlag = idx === 0 ? editingR : idx === 1 ? editingG : editingB;
               return (
                 <div key={idx} className={styles.rgbaRow}>
                   <span className={styles.rgbaLabel}>{label}</span>
                   <input
                     className={styles.rgbaInput}
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     min={min}
                     max={max}
-                    step={step}
-                    value={rgbaInputs[idx]}
+                    value={typeof rgbaInputs[idx] === 'string' ? rgbaInputs[idx] : (editingFlag ? String(rgbaInputs[idx]) : (rgbaInputs[idx] === 0 ? '' : String(rgbaInputs[idx])))}
                     style={{width: 60, margin: '0 8px'}}
+                    onFocus={() => {
+                      if (idx === 0) setEditingR(true);
+                      if (idx === 1) setEditingG(true);
+                      if (idx === 2) setEditingB(true);
+                    }}
                     onChange={e => {
-                      const v = idx < 3 ? Math.max(min, Math.min(max, Number(e.target.value))) : Math.max(min, Math.min(max, Number(e.target.value)));
+                      const val = e.target.value;
+                      // 允许为空
+                      if (val === '') {
+                        userInputRef.current = true;
+                        setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? '' : x));
+                        return;
+                      }
+                      // 只允许0-255
+                      if (!/^\d{0,3}$/.test(val)) return;
+                      const num = Number(val);
+                      if (isNaN(num) || num < min || num > max) return;
                       userInputRef.current = true;
-                      setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? v : x));
+                      setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? num : x));
+                    }}
+                    onBlur={e => {
+                      handleRgbaInputBlur(idx, e.target.value);
+                    }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        e.target.blur(); // 回车即失去焦点，触发生效
+                      }
                     }}
                   />
                   <input

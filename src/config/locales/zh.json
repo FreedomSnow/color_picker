@@ -5,13 +5,15 @@
       "theme": "推荐主题",
       "image": "图片取色",
       "color": "颜色选择",
-      "wheel": "色轮调色板"
+      "wheel": "色轮调色板",
+      "tools": "工具"
     },
     "desc": {
       "theme": "精选配色方案，灵感速查",
       "image": "上传图片，智能提取主色调",
       "color": "多种方式精准选色",
-      "wheel": "可视化色轮自由调色"
+      "wheel": "可视化色轮自由调色",
+      "tools": "常用色彩工具集合"
     },
     "language": "简体中文",
     "contact": "联系我们",
@@ -55,6 +57,9 @@
   "recommendThemes": {
     "loading": "加载中...",
     "untitled": "未命名"
+  },
+  "toolsPanel": {
+    "title": "颜色转换"
   },
   "contactUs": {
     "title": "联系我们",

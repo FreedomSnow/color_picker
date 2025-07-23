@@ -5,13 +5,15 @@
       "theme": "Recommended Themes",
       "image": "Image Picker",
       "color": "Color Picker",
-      "wheel": "Color Wheel"
+      "wheel": "Color Wheel",
+      "tools": "Tools"
     },
     "desc": {
       "theme": "Selected color schemes, quick inspiration",
       "image": "Upload image, extract main color",
       "color": "Multiple ways to pick color",
-      "wheel": "Visual color wheel, free adjustment"
+      "wheel": "Visual color wheel, free adjustment",
+      "tools": "Collection of commonly used color tools"
     },
     "language": "English",
     "contact": "Contact Us",
@@ -55,6 +57,9 @@
   "recommendThemes": {
     "loading": "Loading...",
     "untitled": "Untitled"
+  },
+   "toolsPanel": {
+    "title": "Color transformations"
   },
   "contactUs": {
     "title": "Contact Us",
