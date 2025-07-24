@@ -59,7 +59,8 @@
     "untitled": "Untitled"
   },
    "toolsPanel": {
-    "title": "Color transformations"
+    "title": "Color transformations",
+    "screenPickerBtn": "Screen Color Picker"
   },
   "contactUs": {
     "title": "Contact Us",

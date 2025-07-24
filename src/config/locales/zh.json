@@ -59,7 +59,8 @@
     "untitled": "未命名"
   },
   "toolsPanel": {
-    "title": "颜色转换"
+    "title": "颜色转换",
+    "screenPickerBtn": "屏幕取色"
   },
   "contactUs": {
     "title": "联系我们",

@@ -20,7 +20,7 @@
 
 body {
   background: white;
-  font-family: 'Josefin Slab', serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: inherit;
 }
 
 .content {
