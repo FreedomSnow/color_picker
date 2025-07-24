@@ -540,26 +540,27 @@ const ColorPicker = () => {
               className={styles.valueHexInput}
               value={hexInput}
               ref={hexInputRef}
-              onChange={handleHexInputChange}
-              onBlur={applyHexInput}
-              onKeyDown={e => { 
-                if (e.key === 'Enter') {
-                  applyHexInput(); 
-                  e.target.blur();
-                }
-              }}
-              onMouseDown={e => {
-                // 只有鼠标点击时允许获取焦点
-                // 其他情况不自动 focus
-                // 这里不需要特殊处理，默认行为即可
-              }}
-              tabIndex={-1}
-              onFocus={e => {
-                // 如果不是鼠标事件触发的 focus，则立即 blur
-                if (!e.nativeEvent || e.nativeEvent.detail === 0) {
-                  e.target.blur();
-                }
-              }}
+              disabled={true} // 禁用输入框，避免用户直接输入
+              // onChange={handleHexInputChange}
+              // onBlur={applyHexInput}
+              // onKeyDown={e => { 
+              //   if (e.key === 'Enter') {
+              //     applyHexInput(); 
+              //     e.target.blur();
+              //   }
+              // }}
+              // onMouseDown={e => {
+              //   // 只有鼠标点击时允许获取焦点
+              //   // 其他情况不自动 focus
+              //   // 这里不需要特殊处理，默认行为即可
+              // }}
+              // tabIndex={-1}
+              // onFocus={e => {
+              //   // 如果不是鼠标事件触发的 focus，则立即 blur
+              //   if (!e.nativeEvent || e.nativeEvent.detail === 0) {
+              //     e.target.blur();
+              //   }
+              // }}
             />
             <div className={styles.hexColorBlock} style={{background: hex}}></div>
           </div>
@@ -586,34 +587,35 @@ const ColorPicker = () => {
                     max={max}
                     value={typeof rgbaInputs[idx] === 'string' ? rgbaInputs[idx] : (editingFlag ? String(rgbaInputs[idx]) : (rgbaInputs[idx] === 0 ? '' : String(rgbaInputs[idx])))}
                     style={{width: 60, margin: '0 8px'}}
-                    onFocus={() => {
-                      if (idx === 0) setEditingR(true);
-                      if (idx === 1) setEditingG(true);
-                      if (idx === 2) setEditingB(true);
-                    }}
-                    onChange={e => {
-                      const val = e.target.value;
-                      // 允许为空
-                      if (val === '') {
-                        userInputRef.current = true;
-                        setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? '' : x));
-                        return;
-                      }
-                      // 只允许0-255
-                      if (!/^\d{0,3}$/.test(val)) return;
-                      const num = Number(val);
-                      if (isNaN(num) || num < min || num > max) return;
-                      userInputRef.current = true;
-                      setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? num : x));
-                    }}
-                    onBlur={e => {
-                      handleRgbaInputBlur(idx, e.target.value);
-                    }}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        e.target.blur(); // 回车即失去焦点，触发生效
-                      }
-                    }}
+                    disabled={true} // 只有编辑时允许输入
+                    // onFocus={() => {
+                    //   if (idx === 0) setEditingR(true);
+                    //   if (idx === 1) setEditingG(true);
+                    //   if (idx === 2) setEditingB(true);
+                    // }}
+                    // onChange={e => {
+                    //   const val = e.target.value;
+                    //   // 允许为空
+                    //   if (val === '') {
+                    //     userInputRef.current = true;
+                    //     setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? '' : x));
+                    //     return;
+                    //   }
+                    //   // 只允许0-255
+                    //   if (!/^\d{0,3}$/.test(val)) return;
+                    //   const num = Number(val);
+                    //   if (isNaN(num) || num < min || num > max) return;
+                    //   userInputRef.current = true;
+                    //   setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? num : x));
+                    // }}
+                    // onBlur={e => {
+                    //   handleRgbaInputBlur(idx, e.target.value);
+                    // }}
+                    // onKeyDown={e => {
+                    //   if (e.key === 'Enter') {
+                    //     e.target.blur(); // 回车即失去焦点，触发生效
+                    //   }
+                    // }}
                   />
                   <input
                     className={styles.rgbaSlider}
@@ -628,11 +630,14 @@ const ColorPicker = () => {
                       '--slider-accent': accent,
                       '--slider-percent': percent + '%',
                     }}
+                    disabled={true} // 只有编辑时允许拖动
+                    /*
                     onChange={e => {
                       const v = idx < 3 ? Math.max(min, Math.min(max, Number(e.target.value))) : Math.max(min, Math.min(max, Number(e.target.value)));
                       userInputRef.current = true;
                       setRgbaInputs(inputs => inputs.map((x, i) => i === idx ? v : x));
                     }}
+                    */
                   />
                 </div>
               );
