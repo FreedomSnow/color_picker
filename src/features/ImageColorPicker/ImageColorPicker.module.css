@@ -183,7 +183,7 @@
     font-size: 16px;
     font-weight: 700;
     color: rgb(50,50,50);
-    font-family: 'Josefin Slab', 'XiangCuiSong-Bold', serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: inherit;
   } 
   
 .paletteTitle {
@@ -247,7 +247,7 @@
   .paletteHex {
     font-size: 13px;
     color: #222b3a;
-    font-family: 'Josefin Slab', 'XiangCuiSong-Bold', serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: inherit;
   }
   
   .paletteColorActive {

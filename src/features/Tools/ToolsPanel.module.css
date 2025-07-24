@@ -63,6 +63,8 @@
   font-size: 15px;
   color: rgb(50, 50, 50);
   background: white;
+  font-family: inherit;
+  /* font-family: 'Josefin Slab', 'XiangCuiSong-Bold', serif, system-ui, Avenir, Helvetica, Arial, sans-serif; */
 }
 .resultRow {
   display: flex;
