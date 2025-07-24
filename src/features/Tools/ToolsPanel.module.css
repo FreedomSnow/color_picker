@@ -85,9 +85,28 @@
   padding: 6px 12px;
   min-height: 24px;
 }
+
 .rightPanel {
   flex: 1;
   border-left: 1px dashed #e0e0e0;
   height: 100%;
   /* background: yellow; */
+}
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  margin: 24px;
+}
+.pickerBtn {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  background: #f5f6fa;
+  border: 1px dashed rgb(155, 155, 155);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px 18px;
+  transition: background 0.18s, border 0.18s;
+  color: black;
+  gap: 6px;
 }
