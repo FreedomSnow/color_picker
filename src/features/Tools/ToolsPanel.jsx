@@ -72,9 +72,31 @@ function parseColor(input, type) {
 function ToolsPanel() {
   const { t, i18n } = useTranslation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState(COLOR_FORMATS[0]);
-  const [inputValue, setInputValue] = useState('');
-  const [colorResults, setColorResults] = useState({ hex: '', rgb: '', hsl: '', hwb: '', cmyk: '', ncol: '' });
+  // 持久化 key
+  const STORAGE_KEY = 'toolsPanelData';
+  // 初始化时从 localStorage 读取
+  const getInitialData = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        // 兼容格式
+        return {
+          selectedFormat: COLOR_FORMATS.find(f => f.key === data.selectedFormat?.key) || COLOR_FORMATS[0],
+          inputValue: data.inputValue || '',
+          colorResults: data.colorResults || { hex: '', rgb: '', hsl: '', hwb: '', cmyk: '', ncol: '' }
+        };
+      }
+    } catch {}
+    return {
+      selectedFormat: COLOR_FORMATS[0],
+      inputValue: '',
+      colorResults: { hex: '', rgb: '', hsl: '', hwb: '', cmyk: '', ncol: '' }
+    };
+  };
+  const [selectedFormat, setSelectedFormat] = useState(getInitialData().selectedFormat);
+  const [inputValue, setInputValue] = useState(getInitialData().inputValue);
+  const [colorResults, setColorResults] = useState(getInitialData().colorResults);
   const [pendingEyeDropper, setPendingEyeDropper] = useState(null);
   const dropdownRef = useRef(null);
 
@@ -94,6 +116,15 @@ function ToolsPanel() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [dropdownOpen]);
+
+  // 持久化保存
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      selectedFormat,
+      inputValue,
+      colorResults
+    }));
+  }, [selectedFormat, inputValue, colorResults]);
 
   // 失焦或回车时解析
   const handleInputBlurOrEnter = () => {
