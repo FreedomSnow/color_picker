@@ -102,32 +102,75 @@ function kmeans(colors, k = 5, maxIter = 10) {
 
 const ImageColorPicker = ({ selectedTheme }) => {
   const { t } = useTranslation();
-  const [image, setImage] = useState(null); // 默认不显示图片
-  const [mainColors, setMainColors] = useState([]); // 颜色数组
-  const [palette, setPalette] = useState([]); // 兼容旧逻辑
+  const STORAGE_KEY = 'imageColorPickerData';
+  // 初始化时从 localStorage 读取
+  const getInitialData = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        return {
+          image: data.image || null,
+          mainColors: data.mainColors || [],
+          palette: data.palette || [],
+          selectedColor: data.selectedColor || null,
+          marker: data.marker || null,
+          kValue: data.kValue || 5,
+          kInput: data.kInput || '5'
+        };
+      }
+    } catch {}
+    return {
+      image: null,
+      mainColors: [],
+      palette: [],
+      selectedColor: null,
+      marker: null,
+      kValue: 5,
+      kInput: '5'
+    };
+  };
+  const [image, setImage] = useState(getInitialData().image);
+  const [mainColors, setMainColors] = useState(getInitialData().mainColors);
+  const [palette, setPalette] = useState(getInitialData().palette);
   const imageRef = useRef(null);
   const fileInputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(null); // palette 选中色块
-  const [marker, setMarker] = useState(null); // {x, y, color}
-  const [kValue, setKValue] = useState(5); // K值，默认5
-  const [kInput, setKInput] = useState('5'); // 输入框受控
+  const [selectedColor, setSelectedColor] = useState(getInitialData().selectedColor);
+  const [marker, setMarker] = useState(getInitialData().marker);
+  const [kValue, setKValue] = useState(getInitialData().kValue);
+  const [kInput, setKInput] = useState(getInitialData().kInput);
   const [kError, setKError] = useState('');
-  const [hoverPos, setHoverPos] = useState(null); // 鼠标悬停坐标
+  const [hoverPos, setHoverPos] = useState(null);
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [magnifierColor, setMagnifierColor] = useState({hex: '', rgb: ''});
   const magnifierRef = useRef(null);
+  // 持久化保存
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      image,
+      mainColors,
+      palette,
+      selectedColor,
+      marker,
+      kValue,
+      kInput
+    }));
+  }, [image, mainColors, palette, selectedColor, marker, kValue, kInput]);
 
   // 如果selectedTheme变化，自动显示图片和颜色
   useEffect(() => {
     if (selectedTheme) {
-      setImage(selectedTheme.image);
-      // 直接用主题色作为主色
-      setPalette(selectedTheme.colors || []);
-      setMainColors((selectedTheme.colors || []).map(hex => ({ hex, rgb: hexToRgb(hex) })));
-      setSelectedColor(null); // 切换主题时重置选中
-      setKInput(String(kValue));
-      setKError('');
+      // 只有图片变化时才重置主色和选中色，否则保持 localStorage 的值
+      if (selectedTheme.image !== image) {
+        setImage(selectedTheme.image);
+        setPalette(selectedTheme.colors || []);
+        setMainColors((selectedTheme.colors || []).map(hex => ({ hex, rgb: hexToRgb(hex) })));
+        setSelectedColor(null); // 切换主题时重置选中
+        setMarker(null);
+        setKInput(String(kValue));
+        setKError('');
+      }
     }
   }, [selectedTheme]);
 
