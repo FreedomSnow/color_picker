@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "ColorPicker",
+    "title": "ColorKit",
     "tab": {
       "theme": "Recommended Themes",
       "image": "Image Picker",
@@ -10,7 +10,7 @@
     },
     "desc": {
       "theme": "Selected color schemes, quick inspiration",
-      "image": "Upload image, extract main color",
+      "image": "Extract main color of image",
       "color": "Multiple ways to pick color",
       "wheel": "Visual color wheel, free adjustment",
       "tools": "Collection of commonly used color tools"
