@@ -13,7 +13,7 @@
       "image": "Extract main color of image",
       "color": "Multiple ways to pick color",
       "wheel": "Visual color wheel, free adjustment",
-      "tools": "Collection of commonly used color tools"
+      "tools": "Color transformations,Screen color picker"
     },
     "language": "English",
     "contact": "Contact Us",
@@ -60,7 +60,7 @@
   },
    "toolsPanel": {
     "title": "Color transformations",
-    "screenPickerBtn": "Screen Color Picker"
+    "screenPickerBtn": "Screen color picker"
   },
   "contactUs": {
     "title": "Contact Us",

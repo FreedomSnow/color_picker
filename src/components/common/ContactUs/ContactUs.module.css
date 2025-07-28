@@ -11,6 +11,7 @@
   z-index: 1000;
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
+  font-family: 'Josefin Slab', serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .modal {
@@ -100,6 +101,7 @@
   box-sizing: border-box;
   background-color: #ffffff;
   color: #374151;
+  font-family: inherit;
 }
 
 .formGroup input:focus,
@@ -113,7 +115,6 @@
 .formGroup textarea {
   resize: vertical;
   min-height: 100px;
-  font-family: inherit;
 }
 
 .contactInfo {

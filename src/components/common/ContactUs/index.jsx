@@ -134,9 +134,9 @@ const ContactUs = ({ isOpen, onClose }) => {
           </div>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.cancelBtn} onClick={handleCancel}>
+            {/* <button type="button" className={styles.cancelBtn} onClick={handleCancel}>
               {t('contactUs.cancel')}
-            </button>
+            </button> */}
             <button type="submit" className={styles.submitBtn}>
               {t('contactUs.submit')}
             </button>
