@@ -1,20 +1,26 @@
 import styles from "./App.module.css";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
-import RecommendThemes from './RecommendThemes';
-import ImageColorPicker from './ImageColorPicker';
+import RecommendThemes from '../features/RecommendThemes';
+import ImageColorPicker from '../features/ImageColorPicker';
+import ColorPicker from '../features/ColorPicker';
+import ColorWheel from '../features/ColorWheel';
+import ToolsPanel from '../features/Tools/ToolsPanel';
+import ContactUs from '../components/common/ContactUs';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedTheme, setSelectedTheme] = useState(null); // 新增
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const tabList = [
     { title: t('app.tab.theme'), desc: t('app.desc.theme') },
     { title: t('app.tab.image'), desc: t('app.desc.image') },
     { title: t('app.tab.color'), desc: t('app.desc.color') },
-    { title: t('app.tab.wheel'), desc: t('app.desc.wheel') },
+    // { title: t('app.tab.wheel'), desc: t('app.desc.wheel') },
+    { title: t('app.tab.tools'), desc: t('app.desc.tools') },
   ];
   const languages = [
     { code: 'zh', label: t('app.language', { lng: 'zh' }) },
@@ -69,7 +75,10 @@ function App() {
                 ))}
               </div>
             )}
-            <button className={styles.contactBtn} onClick={() => changeLanguage('zh')}>
+            <button 
+              className={styles.contactBtn}
+              onClick={() => setContactModalOpen(true)}
+            >
               {t('app.contact')}
             </button>
           </div>
@@ -100,11 +109,17 @@ function App() {
             {selectedTab === 1 && (
               <ImageColorPicker selectedTheme={selectedTheme} />
             )}
-            {selectedTab === 2 && <div>{t('app.colorContent')}</div>}
-            {selectedTab === 3 && <div>{t('app.wheelContent')}</div>}
+            {selectedTab === 2 && <ColorPicker />}
+            {/* {selectedTab === 3 && <ColorWheel />} */}
+            {selectedTab === 3 && <ToolsPanel />}
           </div>
         </div>
       </div>
+      
+      <ContactUs 
+        isOpen={contactModalOpen} 
+        onClose={() => setContactModalOpen(false)} 
+      />
     </div>
   );
 }

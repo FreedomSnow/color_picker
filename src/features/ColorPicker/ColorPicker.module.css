@@ -1,0 +1,445 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* background: lightgrey; */
+}
+.splitWrap {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+.leftPanel {
+  margin: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+  min-width: 300px;
+  max-width: 400px;
+  height: 95%;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  align-items: stretch;
+  /* background: #00f; */
+}
+.svPanel {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 1px dashed rgb(155, 155, 155);
+  border-radius: 16px;
+}
+/* .svThumb {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+} */
+
+.hueSliderWapper {
+  padding: 20px 15px;
+  display: flex;
+  align-items: center;
+  /* background: yellow; */
+}
+.hueSlider {
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+  border-radius: 10px;
+  position: relative;
+}
+.hueThumb {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  /* 位置和背景由JS控制 */
+  cursor: pointer;
+  z-index: 2;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hexRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* background: #0ff; */
+}
+.valueHexTitle {
+  width: 50px;
+  font-size: 20px;
+  color: black;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.valueHexInput {
+  font-size: 18px;
+  height: 12px;
+  letter-spacing: 1px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 8px 10px;
+  color: rgb(50, 50, 50);
+  background: white;
+}
+.hexColorBlock {
+  width: 50px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.rgbaRows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+  /* background:#1976d2; */
+}
+.rgbaRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.rgbaLabel {
+  width: 50px;
+  font-size: 20px;
+  font-weight: 700;
+  color: black;
+  text-align: left;
+}
+.rgbaInput {
+  width: 50px;
+  height: 22px;
+  border-radius: 16px;
+  font-size: 18px;
+  letter-spacing: 1px;
+  border: 1px solid #ccc;
+  padding: 2px 10px;
+  color: rgb(50, 50, 50);
+  background: white;
+}
+.rgbaSlider {
+  flex: 1;
+  margin-left: 8px;
+  height: 4px;
+  background: linear-gradient(to right, var(--slider-accent, #1976d2) 0%, var(--slider-accent, #1976d2) var(--slider-percent, 0%), #eee var(--slider-percent, 0%), #eee 100%);
+  border-radius: 2px;
+  outline: none;
+  appearance: none;
+}
+.rgbaSlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--slider-accent, #1976d2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  cursor: pointer;
+  transition: border 0.2s;
+  margin-top: -6px;
+}
+.rgbaSlider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--slider-accent, #1976d2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  cursor: pointer;
+  transition: border 0.2s;
+  margin-top: -6px;
+}
+.rgbaSlider::-ms-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--slider-accent, #1976d2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  cursor: pointer;
+  transition: border 0.2s;
+  margin-top: -6px;
+}
+.rgbaSlider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: transparent;
+}
+.rgbaSlider::-ms-fill-lower {
+  background: transparent;
+}
+.rgbaSlider::-ms-fill-upper {
+  background: transparent;
+}
+
+.rightPanel {
+  margin: 10px 30px 10px 30px;
+  gap: 20px;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 100%;
+  /* background: #0f0; */
+}
+
+.topTitle {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.secondTitle {
+  font-weight: 500;
+  font-size: 14px;
+  color: black;
+}
+
+.colorBlockHexTitle {
+  font-size: 13px;
+  color: rgb(50, 50, 50);
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 2px #0006;
+}
+
+.variations {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+  border-left: 1px dashed #e0e0e0;
+  /* border: 1px dashed rgb(155, 155, 155); */
+  /* background: yellow; */
+}
+.incrementInput {
+  width: 30px;
+  font-size: 12px;
+  text-align: center;
+  color: rgb(50, 50, 50);
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  background: white;
+}
+.colorStepsWapper {
+  width: 220px;
+  gap: 20px;
+  display: flex;
+  align-items: center;
+  height: 90%;
+  flex-direction: row;
+  /* background: red; */
+}
+.colorSteps {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  justify-content: stretch;
+  border-radius: 8px;
+  border: 1px dashed rgb(155, 155, 155);
+}
+.colorStep {
+  width: 100px;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgb(50, 50, 50);
+  position: relative;
+  min-height: 0;
+}
+.colorStep:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.colorStep:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.colorStepHex {
+  position: absolute;
+  color: rgb(50, 50, 50);
+  font-size: 13px;
+}
+
+.combinations {
+  padding: 0px 20px;
+  min-width: 220px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-left: 1px dashed #e0e0e0;
+  /* background: pink; */
+}
+
+.combColorBlock {
+  min-width: 0;
+  width: auto;
+  max-width: 80px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  padding: 0px 8px;
+  overflow: hidden;
+}
+
+
+.alphaSliderWapper {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  height: 90%;
+  /* background: yellow; */
+}
+.alphaSlider {
+  width: 28px;
+  height: 100%;
+  border: 1px dashed rgb(155, 155, 155);
+  background: linear-gradient(to bottom, rgba(255, 0, 0, 0), #f00);
+  border-radius: 8px;
+  position: relative;
+  margin-left: 25px;
+}
+.alphaThumb {
+  position: absolute;
+  left: -4px;
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.10);
+}
+
+
+.valueRow {
+  display: flex;
+  align-items: flex-start;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+.valueLabelWrap {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  margin-right: 16px;
+  height: 40px;
+}
+.valueLabel {
+  color: black;
+  font-weight: 700;
+  font-size: 18px;
+  margin-right: 4px;
+  line-height: 1.2;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+}
+.valueDropdownBtn {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.valueDropdown {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  min-width: 80px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 10;
+  margin-top: 2px;
+}
+.valueDropdownItem {
+  padding: 8px 16px;
+  font-size: 16px;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.valueDropdownItem:hover {
+  background: #f5f5f5;
+}
+.valueNumWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 16px;
+  height: 40px;
+  justify-content: flex-start;
+}
+.valueNum {
+  font-size: 18px;
+  color: black;
+  font-weight: 500;
+  line-height: 1.2;
+  width: 40px;
+  height: 22px;
+  display: flex;
+  align-items: flex-start;
+}
+.valueNumTitle {
+  font-size: 20px;
+  color: #888;
+  margin-top: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+
+.swatchBar {
+  display: flex;
+  align-items: center;
+  margin-top: 36px;
+}
+.addSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 22px;
+  color: #888;
+  margin-right: 8px;
+  cursor: pointer;
+}
+.swatchList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 8px;
+}
+.swatch {
+  width: 32px;
+  height: 24px;
+  border-radius: 6px;
+  background: #eee;
+  border: 1px solid #ddd;
+}

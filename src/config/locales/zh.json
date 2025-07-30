@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "ColorKit",
+    "tab": {
+      "theme": "推荐主题",
+      "image": "图片取色",
+      "color": "颜色选择",
+      "wheel": "色轮调色板",
+      "tools": "工具"
+    },
+    "desc": {
+      "theme": "精选配色方案，灵感速查",
+      "image": "智能提取图片主色调",
+      "color": "多种方式精准选色",
+      "wheel": "可视化色轮自由调色",
+      "tools": "颜色转换,屏幕取色"
+    },
+    "language": "简体中文",
+    "contact": "联系我们",
+    "contactMessage": "联系我们：example@email.com\n\n欢迎反馈和建议！",
+    "themeContent": "这里是推荐主题内容",
+    "imageContent": "这里是图片取色内容",
+    "colorContent": "这里是颜色选择内容",
+    "wheelContent": "这里是色轮调色板内容"
+  },
+  "imagePicker": {
+    "image": "图片",
+    "position": "定位",
+    "changeImage": "更换图片",
+    "colorPalette": "调色板",
+    "colors": "颜色",
+    "useYourImage": "使用您的图片",
+    "copy": "复制",
+    "clickToUpload": "点击上传",
+    "orDrag": "或拖拽图片到此处",
+    "maxSize": "最大文件：15MB",
+    "hex": "HEX：",
+    "rgb": "RGB：",
+    "kInputLabel": "主色数量",
+    "kInputPlaceholder": "请输入3-20之间的数字",
+    "kInputError": "请输入3-20之间的数字"
+  },
+  "colorPicker": {
+    "variations": "渐变",
+    "shades": "深色阶",
+    "tints": "浅色阶",
+    "combinations": "配色方案",
+    "comb": {
+      "complement": "互补色",
+      "split-complementary": "分裂互补",
+      "triadic": "三分色",
+      "analogous": "类似色",
+      "monochromatic": "单色",
+      "tetradic": "四方色"
+    }
+  },
+  "recommendThemes": {
+    "loading": "加载中...",
+    "untitled": "未命名"
+  },
+  "toolsPanel": {
+    "title": "颜色转换",
+    "screenPickerBtn": "屏幕取色"
+  },
+  "contactUs": {
+    "title": "联系我们",
+    "name": "姓名",
+    "namePlaceholder": "请输入您的姓名",
+    "email": "邮箱",
+    "emailPlaceholder": "请输入您的邮箱地址",
+    "subject": "主题",
+    "subjectPlaceholder": "请输入反馈主题",
+    "message": "消息内容",
+    "messagePlaceholder": "请详细描述您的问题或建议...",
+    "contactInfo": "联系信息",
+    "emailInfo": "邮箱：example@email.com",
+    "responseTime": "我们会在24小时内回复您的消息",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitSuccess": "感谢您的反馈！我们会尽快回复您。",
+    "submitError": "提交失败，请稍后重试"
+  }
+} 
