@@ -106,7 +106,7 @@ function getColorCombinations(h, s, b) {
 const ColorPicker = () => {
   const { i18n, t } = useTranslation();
   const lang = i18n.language;
-  const getFontFamily = () => lang === 'zh' ? 'XiangCuiSong-Bold, Josefin Slab, serif' : 'Josefin Slab, XiangCuiSong-Bold, serif';
+  const getFontFamily = () => lang === 'zh' ? 'XiangCuiSong-Bold, Raleway, serif' : 'Raleway, XiangCuiSong-Bold, serif';
   const [forceUpdate, setForceUpdate] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);

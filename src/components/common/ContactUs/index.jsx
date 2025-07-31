@@ -75,8 +75,11 @@ const ContactUs = ({ isOpen, onClose }) => {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>{t('contactUs.title')}</h2>
-          <button className={styles.closeBtn} onClick={onClose}>
-            ×
+          <button className={styles.closeBtn} onClick={onClose} aria-label="close">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="8" y1="8" x2="22" y2="22" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="22" y1="8" x2="8" y2="22" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
           </button>
         </div>
         
