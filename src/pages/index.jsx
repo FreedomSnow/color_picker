@@ -28,8 +28,28 @@ function App() {
   ];
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    localStorage.setItem('selectedLanguage', lng);
     setDropdownOpen(false);
   };
+
+  // 打开或者刷新网站时，
+  // 检查缓存中是否有选中语言，
+  // 如果没有则设置浏览器语言为选中语言，调用changeLanguage并且更新languageBtn显示内容；
+  // 如果有则使用缓存中语言，调用changeLanguage并且更新languageBtn显示内容。
+  useEffect(() => {
+    const cachedLang = localStorage.getItem('selectedLanguage');
+    if (cachedLang) {
+      i18n.changeLanguage(cachedLang);
+    } else {
+      // 获取浏览器语言，兼容性处理
+      const browserLang = (navigator.language || navigator.userLanguage || 'zh').toLowerCase();
+      // 只支持zh和en，默认zh
+      let lang = 'zh';
+      if (browserLang.startsWith('en')) lang = 'en';
+      i18n.changeLanguage(lang);
+      localStorage.setItem('selectedLanguage', lang);
+    }
+  }, []);
   // 点击外部关闭下拉
   useEffect(() => {
     function handleClickOutside(event) {
@@ -46,6 +66,7 @@ function App() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [dropdownOpen]);
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
