@@ -25,7 +25,7 @@ const RecommendThemes = ({ onThemeSelect }) => {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const { i18n, t } = useTranslation();
-  const currentLanguage = i18n.language;
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
 
   useEffect(() => {
     const loadThemes = async () => {
@@ -38,11 +38,16 @@ const RecommendThemes = ({ onThemeSelect }) => {
 
       try {
         // 从文件读取数据
-        const themesFromFile = themesData.themes;
-        
+        let themesFromFile = themesData.themes;
+        // 修正图片路径（如果不是以 http/https/ 或 / 开头，则加上 /public/ 前缀）
+        themesFromFile = themesFromFile.map(theme => ({
+          ...theme,
+          image: theme.image && !/^https?:\/\//.test(theme.image) && !theme.image.startsWith('/')
+            ? '/public/' + theme.image
+            : theme.image
+        }));
         // 缓存数据
         cachedThemes = themesFromFile;
-        
         // 设置状态
         setThemes(themesFromFile);
         setLoading(false);
@@ -51,23 +56,19 @@ const RecommendThemes = ({ onThemeSelect }) => {
         setLoading(false);
       }
     };
-
     loadThemes();
   }, []);
 
   // 监听语言变化
   useEffect(() => {
-    const handleLanguageChange = () => {
-      // 强制重新渲染
-      setThemes([...themes]);
+    const handleLanguageChange = (lng) => {
+      setCurrentLanguage(lng);
     };
-
     i18n.on('languageChanged', handleLanguageChange);
-    
     return () => {
       i18n.off('languageChanged', handleLanguageChange);
     };
-  }, [i18n, themes]);
+  }, [i18n]);
 
   // 获取当前语言的标题
   const getLocalizedTitle = (titleObj) => {
