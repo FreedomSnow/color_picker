@@ -2,14 +2,14 @@
   "app": {
     "title": "ColorKit",
     "tab": {
-      "theme": "Recommended Themes",
+      "theme": "Themes",
       "image": "Image Picker",
       "color": "Color Picker",
       "wheel": "Color Wheel",
       "tools": "Tools"
     },
     "desc": {
-      "theme": "Selected color schemes, quick inspiration",
+      "theme": "Color schemes, quick inspiration",
       "image": "Extract main color of image",
       "color": "Multiple ways to pick color",
       "wheel": "Visual color wheel, free adjustment",

@@ -114,8 +114,8 @@ body {
 .tabCardActive {
   border-radius: 20px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.09);
-  padding: 26px 16px 16px 16px;
-  font-size: 1.22rem;
+  padding: 26px 26px 16px 16px;
+  font-size: 1rem;
   color: #888;
   cursor: pointer;
   border: 1px dashed rgb(50, 50, 50);
@@ -144,7 +144,7 @@ body {
   background: rgba(245, 239, 235, 0.8);
   color: black;
   border: 1px solid rgb(50, 50, 50);
-  font-weight: bold;
+  /* font-weight: bold; */
   transform: scale(1.08);
   z-index: 2;
 }
@@ -156,14 +156,14 @@ body {
 }
 
 .tabCardTitle {
-  font-size: 1.15rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 600;
   margin-bottom: 10px;
   color: rgb(73, 73, 73);
 }
 
 .tabCardDesc {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: rgb(133, 133, 133);
   line-height: 1.4;
 }

@@ -1,16 +1,7 @@
 {
   "themes": [
     {
-      "id": 1,
-      "title": {
-        "zh": "美拉德",
-        "en": "Maillard"
-      },
-      "image": "/assets/themes/maillard.png",
-      "colors": ["#120B06", "#513E32", "#906E52", "#B28656", "#B8B2A1"]
-    },
-    {
-      "id": 2,
+      "id": 0,
       "title": {
         "zh": "莫兰迪",
         "en": "Morandi"
@@ -19,7 +10,7 @@
       "colors": ["#3A4E59", "#606551", "#9FACA1", "#B69664", "#D8CEC5"]
     },
     {
-      "id": 3,
+      "id": 1,
       "title": {
         "zh": "孟菲斯",
         "en": "Memphis"
@@ -28,7 +19,7 @@
       "colors": ["#F964C2", "#5A4AE8", "#CE88FF", "#F3EC46", "#38CEC4"]
     },
     {
-      "id": 4,
+      "id": 2,
       "title": {
         "zh": "蒙德里安",
         "en": "Mondrian"
@@ -37,31 +28,67 @@
       "colors": ["#F50F0F", "#1286DD", "#FFFFFF", "#FFF100", "#F66814"]
     },
     {
-        "id": 5,
-        "title": {
-          "zh": "马卡龙",
-          "en": "Macaron"
-        },
-        "image": "/assets/themes/macaron.png",
-        "colors": ["#EC8892", "#FAB85A", "#28A49A", "#5048BC", "#945850"]
+      "id": 3,
+      "title": {
+        "zh": "马卡龙",
+        "en": "Macaron"
       },
-      {
-        "id": 6,
-        "title": {
-          "zh": "敦煌",
-          "en": "Dunhuang"
-        },
-        "image": "/assets/themes/dunhuang.png",
-        "colors": ["#070D10", "#56271E", "#B7824E", "#569692", "#EBD7B6"]
+      "image": "/assets/themes/macaron.png",
+      "colors": ["#EC8892", "#FAB85A", "#28A49A", "#5048BC", "#945850"]
+    },
+    {
+      "id": 4,
+      "title": {
+        "zh": "洛可可",
+        "en": "Rococo"
       },
-      {
-        "id": 7,
-        "title": {
-          "zh": "洛可可",
-          "en": "Rococo"
-        },
-        "image": "/assets/themes/rococo.png",
-        "colors": ["#556342", "#9DC6D8", "#D9B6AE", "#CEB498", "#EDEDED"]
-      }
+      "image": "/assets/themes/rococo.png",
+      "colors": ["#556342", "#9DC6D8", "#D9B6AE", "#CEB498", "#EDEDED"]
+    },
+    {
+      "id": 5,
+      "title": {
+        "zh": "马蒂斯",
+        "en": "Matisse"
+      },
+      "image": "/assets/themes/matisse.png",
+      "colors": ["#EF9C98", "#08704B", "#312D2C", "#345EC2", "#DA371C"]
+    },
+    {
+      "id": 6,
+      "title": {
+        "zh": "美拉德",
+        "en": "Maillard"
+      },
+      "image": "/assets/themes/maillard.png",
+      "colors": ["#120B06", "#513E32", "#906E52", "#B28656", "#B8B2A1"]
+    },
+    {
+      "id": 7,
+      "title": {
+        "zh": "敦煌",
+        "en": "Dunhuang"
+      },
+      "image": "/assets/themes/dunhuang.png",
+      "colors": ["#070D10", "#56271E", "#B7824E", "#569692", "#EBD7B6"]
+    },
+    {
+      "id": 8,
+      "title": {
+        "zh": "文森特·梵高",
+        "en": "Vincent van Gogh"
+      },
+      "image": "/assets/themes/starrynight.png",
+      "colors": ["#475078", "#E9D890", "#DFAA26", "#1B151F", "#394E49"]
+    },
+    {
+      "id": 9,
+      "title": {
+        "zh": "克洛德·莫奈",
+        "en": "Claude Monet"
+      },
+      "image": "/assets/themes/waterlily.png",
+      "colors": ["#42625F", "#758874", "#A1B569", "#E3D67B", "#5A89A9"]
+    }
   ]
 } 

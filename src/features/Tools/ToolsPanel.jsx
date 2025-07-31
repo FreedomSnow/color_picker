@@ -233,7 +233,17 @@ function ToolsPanel() {
         ))}
       </div>
       {/* 右侧可扩展区域 */}
-      <div className={styles.rightPanel}>
+      <div 
+        className={styles.rightPanel} 
+        style={(function() {
+          // 仅在输入框有有效颜色时改变背景，否则用默认色
+          const parsed = parseColor(inputValue, selectedFormat.key);
+          let bg = '#f7f7f7';
+          if (parsed && parsed.hex && /^#([0-9a-fA-F]{6})$/.test(parsed.hex)) {
+            bg = parsed.hex;
+          }
+          return { background: bg };
+        })()}>
         <div className={styles.buttonWrapper}>
           <button className={styles.pickerBtn} onClick={async () => {
             if (window.EyeDropper) {
